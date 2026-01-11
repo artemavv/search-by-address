@@ -122,6 +122,30 @@ class SCP_Settings {
             )
         );
 
+
+        // Meta Key for Latitude    
+        register_setting(
+            'scp_settings_group',
+            'scp_search_results_meta_key_latitude',
+            array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'default' => ''
+            )
+        );
+
+
+        // Meta Key for Longitude    
+        register_setting(
+            'scp_settings_group',
+            'scp_search_results_meta_key_longitude',
+            array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'default' => ''
+            )
+        );
+
         // Page to Redirect to
         register_setting(
             'scp_settings_group',
@@ -133,6 +157,16 @@ class SCP_Settings {
             )
         );
 
+        // Post Type
+        register_setting(
+            'scp_settings_group',
+            'scp_search_results_post_type',
+            array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'default' => 'post'
+            )
+        );
         //---------------------Register fields for the search results---------------------
         $this->add_fields_to_admin_page();
 
@@ -219,6 +253,15 @@ class SCP_Settings {
             array($this, 'render_search_results_section'),
             'search-posts-by-address'
         );
+
+        add_settings_field(
+            'scp_search_results_post_type',
+            'Post type to search in',
+            array($this, 'render_search_results_post_type_field'),
+            'search-posts-by-address',
+            'scp_search_results_section'
+        );
+
         
         add_settings_field(
             'scp_search_results_posts_per_page',
@@ -232,6 +275,23 @@ class SCP_Settings {
             'scp_search_results_target_page',
             'Page to Redirect to',
             array($this, 'render_search_results_target_page_field'),
+            'search-posts-by-address',
+            'scp_search_results_section'
+        );
+
+
+        add_settings_field(
+            'scp_search_results_meta_key_latitude',
+            'Meta Key for Latitude',
+            array($this, 'render_search_results_meta_key_latitude_field'),
+            'search-posts-by-address',
+            'scp_search_results_section'
+        );
+
+        add_settings_field(
+            'scp_search_results_meta_key_longitude',
+            'Meta Key for Longitude',
+            array($this, 'render_search_results_meta_key_longitude_field'),
             'search-posts-by-address',
             'scp_search_results_section'
         );
@@ -336,6 +396,55 @@ class SCP_Settings {
         echo '<p>Configure the search results settings.</p>';
     }
     
+    public function render_search_results_post_type_field() {
+        $selected_post_type = Search_Posts_By_Address::get_search_results_setting('post_type');
+
+        $post_types = get_post_types(array(
+            'public' => true,
+        ), 'objects');
+        ?>
+        <select 
+            id="scp_search_results_post_type"
+            name="scp_search_results_post_type"
+            class="regular-text"
+        >
+            <option value=""><?php echo esc_html__('-- Select a post type --', 'search-posts-by-address'); ?></option>
+            <?php foreach ($post_types as $post_type) : ?>
+                <option value="<?php echo esc_attr($post_type->name); ?>" <?php selected($selected_post_type, $post_type->name); ?>>
+                    <?php echo esc_html($post_type->label); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>   
+        <?php
+    }
+
+    public function render_search_results_meta_key_latitude_field() {
+        $meta_key_latitude = Search_Posts_By_Address::get_search_results_setting('meta_key_latitude');
+        ?>
+        <input 
+            type="text" 
+            id="scp_search_results_meta_key_latitude"
+            name="scp_search_results_meta_key_latitude"
+            value="<?php echo esc_attr($meta_key_latitude); ?>"
+            class="regular-text"
+            placeholder="Enter the meta key for latitude"
+        />
+        <?php
+    }
+
+    public function render_search_results_meta_key_longitude_field() {
+        $meta_key_longitude = Search_Posts_By_Address::get_search_results_setting('meta_key_longitude');
+        ?>
+        <input 
+            type="text" 
+            id="scp_search_results_meta_key_longitude"
+            name="scp_search_results_meta_key_longitude"
+            value="<?php echo esc_attr($meta_key_longitude); ?>"
+            class="regular-text"
+            placeholder="Enter the meta key for longitude"
+        />
+        <?php
+    }
     /**
      * Render Search Results posts per page field
      */

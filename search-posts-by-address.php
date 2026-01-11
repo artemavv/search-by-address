@@ -3,7 +3,7 @@
  * Plugin Name: Search Posts By Address
  * Plugin URI: https://example.com/search-posts-by-address
  * Description: A plugin that provides search functionality with Google Maps Autocomplete for custom posts.
- * Version: 0.1
+ * Version: 0.2
  * Author: Artem Avvakumov
  * Author URI: https://example.com
  * License: GPL v2 or later
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('SCP_VERSION', '0.1');
+define('SCP_VERSION', '0.2');
 define('SCP_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SCP_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -43,7 +43,7 @@ class Search_Posts_By_Address {
     public function init() {
         // Register shortcodes
         add_shortcode('show_search_form', array($this, 'render_search_form'));
-        add_shortcode('show_search_results', array($this, 'render_search_results'));
+        add_shortcode('show_search_by_address_results', array($this, 'render_search_results'));
     }
     
     /**
@@ -101,7 +101,12 @@ class Search_Posts_By_Address {
         $setting = get_option('scp_search_form_' . $setting_name, '');
         return apply_filters('scp_search_form_' . $setting_name, $setting);
     }
-    
+
+    public static function get_search_results_setting( $setting_name) {
+        $setting = get_option('scp_search_results_' . $setting_name, '');
+        return apply_filters('scp_search_results_' . $setting_name, $setting);
+    }
+
     /**
      * Render search form shortcode
      * 
@@ -137,10 +142,13 @@ class Search_Posts_By_Address {
             $placeholder = 'Enter an address...';
         }
         
+        $target_page_id = self::get_search_results_setting('target_page');
+
+        $target_page = get_permalink($target_page_id);
         ob_start();
         ?>
         <div class="scp-search-form-wrapper">
-            <form id="scp-search-form" class="scp-search-form">
+            <form id="scp-search-form" class="scp-search-form" target="<?php echo esc_attr($target_page); ?>">
                 <div class="scp-form-group">
                     <label for="scp-address-input" class="scp-label"><?php echo esc_html($address_label); ?></label>
                     <input 
@@ -192,10 +200,51 @@ class Search_Posts_By_Address {
             'posts_per_page' => 10
         ), $atts, 'show_search_results');
         
+        $latitude = $_GET['latitude'];
+        $longitude = $_GET['longitude'];
+        $radius = $_GET['radius'];
+        $meta_key_latitude = self::get_search_results_setting('meta_key_latitude');
+        $meta_key_longitude = self::get_search_results_setting('meta_key_longitude');
+        
+        $args = array(
+            'post_type' => self::get_search_results_setting('post_type'),
+            'posts_per_page' => self::get_search_results_setting('posts_per_page'),
+            'meta_query' => array(
+                array(
+                    'key' => $meta_key_latitude,
+                    'value' => $latitude,
+                    'compare' => '!='
+                ),
+                array(
+                    'key' => $meta_key_longitude,
+                    'value' => $longitude,
+                    'compare' => '!='
+                )
+            )
+        );
+
+        
+        //exit();
+        
         ob_start();
+
+        $query = new WP_Query($args);
+        $posts = $query->posts;
+/*
+        // debug print SQL query and args
+        echo '<pre>';
+        print_r($query->request);
+        echo '</pre>';
+        exit();
+        */
         ?>
         <div id="scp-search-results" class="scp-search-results">
             <!-- Search results will be displayed here -->
+            <?php foreach ($posts as $post) : ?>
+                <div class="scp-search-result">
+                    <h2><?php echo esc_html($post->post_title); ?></h2>
+                </div>
+            <?php endforeach; ?>
         </div>
         <?php
         return ob_get_clean();

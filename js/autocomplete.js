@@ -80,20 +80,29 @@
             
             var latitude = $('#scp-latitude').val();
             var longitude = $('#scp-longitude').val();
-            var fullAddress = $('#scp-full-address').val();
-            var addressInput = $('#scp-address-input').val();
+            var radius = $('#scp-radius').val();
             
             if (!latitude || !longitude) {
                 showMessage('Please select a valid address from the suggestions.', 'error');
                 return;
             }
             
-            // Here you can add AJAX call to process the search
-            // For now, just show the collected data
-            showMessage('Search submitted! Address: ' + fullAddress + ' (Lat: ' + latitude + ', Lng: ' + longitude + ')', 'success');
+            // Get target URL from form's target attribute
+            var targetUrl = $(this).attr('target');
             
-            // You can trigger search results update here
-            // Example: triggerSearchResults(latitude, longitude, fullAddress);
+            if (!targetUrl) {
+                showMessage('Target URL not specified.', 'error');
+                return;
+            }
+            
+            // Build URL with query parameters
+            var url = new URL(targetUrl, window.location.origin);
+            url.searchParams.set('latitude', latitude);
+            url.searchParams.set('longitude', longitude);
+            url.searchParams.set('radius', radius);
+            
+            // Redirect to target URL with parameters
+            window.location.href = url.toString();
         });
     }
     
@@ -144,7 +153,7 @@
         });
         
         // Open info window
-        infoWindow.open(map, marker);
+        //infoWindow.open(map, marker);
         
         // Add click listener to marker
         marker.addListener('click', function() {
