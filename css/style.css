@@ -41,7 +41,6 @@
 
 .scp-address-input:focus {
     outline: none;
-    border-color: #0073aa;
     box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.1);
 }
 
@@ -63,7 +62,6 @@
 
 .scp-radius-select:focus {
     outline: none;
-    border-color: #0073aa;
     box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.1);
 }
 
@@ -71,24 +69,27 @@
     border-color: #999;
 }
 
-.scp-search-button {
+.scp-search-button.w-btn {
     padding: 12px 24px;
-    background-color: #0073aa;
+    background-color: var(--color-content-primary);
     color: #fff;
     border: none;
     border-radius: 4px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    border-radius: 0.3em;
+    border-color: var(--color-content-primary);
 }
 
 .scp-search-button:hover {
-    background-color: #005a87;
+    background-color: var(--color-content-secondary);
+    border-color: var(--color-content-secondary);
 }
-
 .scp-search-button:active {
-    background-color: #004a6f;
+    background-color: var(--color-content-secondary);
+    border-color: var(--color-content-secondary);
 }
 
 .scp-message {
@@ -158,6 +159,32 @@
     background-color: #e8f0fe;
 }
 
+/* Short form horizontal layout */
+.scp-search-form-short {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.scp-search-form-wrapper.scp-search-form-wrapper-short {
+    background: none;
+    border: none;
+}
+
+.scp-search-form-short .scp-address-input {
+    flex: 3;
+}
+
+.scp-search-form-short .scp-radius-select {
+    flex: 1;
+    min-width: 0;
+}
+
+.scp-search-form-short .scp-search-button {
+    flex-shrink: 0;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     .scp-search-form-wrapper {
@@ -169,6 +196,16 @@
     .scp-search-button {
         font-size: 14px;
         padding: 10px;
+    }
+    
+    .scp-search-form-short {
+        flex-direction: column;
+    }
+    
+    .scp-search-form-short .scp-address-input,
+    .scp-search-form-short .scp-radius-select,
+    .scp-search-form-short .scp-search-button {
+        width: 100%;
     }
 }
 

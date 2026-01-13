@@ -21,24 +21,66 @@
      * Initialize Google Maps Autocomplete
      */
     function initAutocomplete() {
+        // Get target country from localized data
+        var targetCountry = (typeof scpData !== 'undefined' && scpData.targetCountry) ? scpData.targetCountry : null;
+        
+        // Initialize for regular form
         var addressInput = document.getElementById('scp-address-input');
+        if (addressInput) {
+            initFormAutocomplete(
+                'scp-address-input', 
+                'scp-latitude', 
+                'scp-longitude', 
+                'scp-full-address', 
+                'scp-radius', 
+                'scp-search-form',
+                true,
+                targetCountry);
+        }
+        
+        // Initialize for short form
+        var addressInputShort = document.getElementById('scp-address-input-short');
+        if (addressInputShort) {
+            initFormAutocomplete(
+                'scp-address-input-short', 
+                'scp-latitude-short', 
+                'scp-longitude-short', 
+                'scp-full-address-short', 
+                'scp-radius-short', 
+                'scp-search-short-form',
+                false,
+                targetCountry);
+        }
+    }
+    
+    /**
+     * Initialize autocomplete for a specific form
+     */
+    function initFormAutocomplete(inputId, latId, lngId, fullAddressId, radiusId, formId, showMap, targetCountry) {
+        var addressInput = document.getElementById(inputId);
         
         if (!addressInput) {
             return;
         }
         
+        // Create Autocomplete options
+        var autocompleteOptions = {
+            types: ['address']
+        };
+        
+        // Add country restriction if target country is set
+        if (targetCountry) {
+            autocompleteOptions.componentRestrictions = { country: targetCountry };
+        }
+        
         // Create Autocomplete instance
-        var autocomplete = new google.maps.places.Autocomplete(addressInput, {
-            types: ['address'],
-            componentRestrictions: { country: 'it' } // Restrict to Italy only
-        });
+        var autocomplete = new google.maps.places.Autocomplete(addressInput, autocompleteOptions);
         
         // When a place is selected, get the details
         autocomplete.addListener('place_changed', function() {
             var place = autocomplete.getPlace();
             
             if (!place.geometry) {
-                showMessage('No details available for the selected address.', 'error');
                 return;
             }
             
@@ -50,15 +92,14 @@
             var lng = place.geometry.location.lng();
             
             // Store values in hidden fields
-            $('#scp-latitude').val(lat);
-            $('#scp-longitude').val(lng);
-            $('#scp-full-address').val(fullAddress);
+            $('#' + latId).val(lat);
+            $('#' + lngId).val(lng);
+            $('#' + fullAddressId).val(fullAddress);
             
-            // Show success message
-            showMessage('Address selected: ' + fullAddress, 'success');
-            
-            // Update map with selected location
-            updateMap(lat, lng, fullAddress);
+            // Update map with selected location (only for regular form)
+            if (showMap) {
+                updateMap(lat, lng, fullAddress);
+            }
             
             // Log for debugging (remove in production)
             console.log('Selected address:', {
@@ -69,21 +110,22 @@
             });
         });
         
-        // Handle radius change
-        $('#scp-radius').on('change', function() {
-            updateCircle();
-        });
+        // Handle radius change (only for regular form with map)
+        if (showMap) {
+            $('#' + radiusId).on('change', function() {
+                updateCircle();
+            });
+        }
         
         // Handle form submission
-        $('#scp-search-form').on('submit', function(e) {
+        $('#' + formId).on('submit', function(e) {
             e.preventDefault();
             
-            var latitude = $('#scp-latitude').val();
-            var longitude = $('#scp-longitude').val();
-            var radius = $('#scp-radius').val();
-            
+            var latitude = $('#' + latId).val();
+            var longitude = $('#' + lngId).val();
+            var radius = $('#' + radiusId).val();
+
             if (!latitude || !longitude) {
-                showMessage('Please select a valid address from the suggestions.', 'error');
                 return;
             }
             
@@ -91,7 +133,6 @@
             var targetUrl = $(this).attr('target');
             
             if (!targetUrl) {
-                showMessage('Target URL not specified.', 'error');
                 return;
             }
             

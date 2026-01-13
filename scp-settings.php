@@ -76,6 +76,17 @@ class SCP_Settings {
             )
         );
 
+        // Submit Button Icon
+        register_setting(
+            'scp_settings_group',
+            'scp_search_form_submit_button_icon',
+            array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'default' => ''
+            )
+        );
+
         // Address Field Label
         register_setting(
             'scp_settings_group',
@@ -98,10 +109,32 @@ class SCP_Settings {
             )
         );
 
+        // Radius Field Options
+        register_setting(
+            'scp_settings_group',
+            'scp_search_form_radius_options',
+            array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_textarea_field',
+                'default' => '500, 500 meters'
+            )
+        );
+
         // Search Placeholder
         register_setting(
             'scp_settings_group',
             'scp_search_form_placeholder',
+            array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'default' => ''
+            )
+        );
+
+        // Target Country
+        register_setting(
+            'scp_settings_group',
+            'scp_search_form_target_country',
             array(
                 'type' => 'string',
                 'sanitize_callback' => 'sanitize_text_field',
@@ -203,6 +236,14 @@ class SCP_Settings {
         );
 
         add_settings_field(
+            'scp_search_form_submit_button_icon',
+            'Submit Button Icon',
+            array($this, 'render_search_form_submit_button_icon_field'),
+            'search-posts-by-address',
+            'scp_search_form_section'
+        );
+
+        add_settings_field(
             'scp_search_form_placeholder',
             'Search Placeholder',
             array($this, 'render_search_form_placeholder_field'),
@@ -222,6 +263,22 @@ class SCP_Settings {
             'scp_search_form_radius_label',
             'Radius Field Label',
             array($this, 'render_search_form_radius_label_field'),
+            'search-posts-by-address',
+            'scp_search_form_section'
+        );
+
+        add_settings_field(
+            'scp_search_form_radius_options',
+            'Radius Field Options',
+            array($this, 'render_search_form_radius_options_field'),
+            'search-posts-by-address',
+            'scp_search_form_section'
+        );
+
+        add_settings_field(
+            'scp_search_form_target_country',
+            'Target Country',
+            array($this, 'render_search_form_target_country_field'),
             'search-posts-by-address',
             'scp_search_form_section'
         );
@@ -338,6 +395,27 @@ class SCP_Settings {
         <?php
     }
 
+    public function render_search_form_submit_button_icon_field() {
+        $submit_button_icon = Search_Posts_By_Address::get_search_form_setting('submit_button_icon');
+        ?>
+        <input 
+            type="text" 
+            id="scp_search_form_submit_button_icon"
+            name="scp_search_form_submit_button_icon"
+            value="<?php echo esc_attr($submit_button_icon); ?>"
+            class="regular-text"
+            placeholder="Enter the submit button icon"
+        />
+        <p class="description">
+            Enter the icon code for the submit button.
+            E.g. search, location_on, location_off, etc.
+        </p>
+        <p class="description">
+            You can find the icon code in the <a href="https://fonts.google.com/icons" target="_blank">Material Icons</a> list.
+        </p>
+        <?php
+    }
+
     /**
      * Render Address Field Label field
      */
@@ -372,6 +450,24 @@ class SCP_Settings {
         <?php
     }
 
+    public function render_search_form_radius_options_field() {
+        $radius_options = Search_Posts_By_Address::get_search_form_setting('radius_options');
+        ?>
+        <textarea 
+            id="scp_search_form_radius_options"
+            name="scp_search_form_radius_options"
+            class="regular-text"
+            rows="6"
+            placeholder="Enter the radius options - one per line."
+        ><?php echo esc_textarea($radius_options); ?></textarea>
+        <p class="description">
+            On  each line enter the radius option and the corresponding label separated by a comma.
+            E.g. 500, 500 meters
+  
+        </p>
+        <?php
+    }
+
     /**
      * Render Search Placeholder field
      */
@@ -386,6 +482,30 @@ class SCP_Settings {
             class="regular-text"
             placeholder="Enter the search placeholder"
         />
+        <?php
+    }
+
+    /**
+     * Render Target Country field
+     */
+    public function render_search_form_target_country_field() {
+        $target_country = Search_Posts_By_Address::get_search_form_setting('target_country');
+        $country_codes = scp_get_country_codes();
+        ?>
+        <select 
+            id="scp_search_form_target_country"
+            name="scp_search_form_target_country"
+            class="regular-text"
+        >
+            <?php foreach ($country_codes as $code => $name) : ?>
+                <option value="<?php echo esc_attr($code); ?>" <?php selected($target_country, $code); ?>>
+                    <?php echo esc_html($name ? $name : $code); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <p class="description">
+            Select the target country code (ISO 3166-1 alpha-2) to restrict address autocomplete results to a specific country.
+        </p>
         <?php
     }
 
