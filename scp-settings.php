@@ -200,6 +200,28 @@ class SCP_Settings {
                 'default' => 'post'
             )
         );
+
+        // No results placeholder marker
+        register_setting(
+            'scp_settings_group',
+            'scp_search_results_missing_placeholder',
+            array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'default' => ''
+            )
+        );
+
+        // No results message
+        register_setting(
+            'scp_settings_group',
+            'scp_search_results_missing_message',
+            array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'default' => ''
+            )
+        );
         //---------------------Register fields for the search results---------------------
         $this->add_fields_to_admin_page();
 
@@ -349,6 +371,22 @@ class SCP_Settings {
             'scp_search_results_meta_key_longitude',
             'Meta Key for Longitude',
             array($this, 'render_search_results_meta_key_longitude_field'),
+            'search-posts-by-address',
+            'scp_search_results_section'
+        );
+
+        add_settings_field(
+            'scp_search_results_missing_placeholder',
+            'No results placeholder marker',
+            array($this, 'render_search_results_missing_placeholder_field'),
+            'search-posts-by-address',
+            'scp_search_results_section'
+        );
+
+        add_settings_field(
+            'scp_search_results_missing_message',
+            'No results message',
+            array($this, 'render_search_results_missing_message_field'),
             'search-posts-by-address',
             'scp_search_results_section'
         );
@@ -504,7 +542,7 @@ class SCP_Settings {
             <?php endforeach; ?>
         </select>
         <p class="description">
-            Select the target country code (ISO 3166-1 alpha-2) to restrict address autocomplete results to a specific country.
+            Select the target country to restrict address autocomplete results to a specific country.
         </p>
         <?php
     }
@@ -606,6 +644,49 @@ class SCP_Settings {
         </select>
         <p class="description">
             <?php echo esc_html__('Select the page where search results will be displayed.', 'search-posts-by-address'); ?>
+        </p>
+        <?php
+    }
+
+    /**
+     * Render No results placeholder marker field
+     */
+    public function render_search_results_missing_placeholder_field() {
+        $placeholder = get_option('scp_search_results_missing_placeholder', '');
+        ?>
+        <input 
+            type="text" 
+            id="scp_search_results_missing_placeholder"
+            name="scp_search_results_missing_placeholder"
+            value="<?php echo esc_attr($placeholder); ?>"
+            class="regular-text"
+            placeholder="Enter the no results placeholder marker"
+        />
+        <p class="description">
+            You can use a placeholder marker to display a message when no results are found. A text entered here will be replaced with the correct message when no results are found.
+            <br>You can place this marker anywhere in the page. 
+            <br>In 'Post List' settings you can place the marker under 'Action when no results found' section ('Order & Quantity' tab)
+        </p>
+        <?php
+    }
+
+    /**
+     * Render No results message field
+     */
+    public function render_search_results_missing_message_field() {
+        $message = get_option('scp_search_results_missing_message', '');
+        ?>
+        <input 
+            type="text" 
+            id="scp_search_results_missing_message"
+            name="scp_search_results_missing_message"
+            value="<?php echo esc_attr($message); ?>"
+            class="regular-text"
+            placeholder="Enter the no results message"
+        />
+        <p class="description">
+            A text entered here will be used as a message when no results are found - it will replace 'placeholder marker' defined above.
+            <br>You can use {address} in the message text - it will be replaced with the actual address searched for.
         </p>
         <?php
     }

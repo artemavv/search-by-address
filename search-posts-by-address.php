@@ -105,7 +105,9 @@ class Search_Posts_By_Address {
             wp_localize_script('scp-autocomplete', 'scpData', array(
                 'ajaxurl' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('scp_nonce'),
-                'targetCountry' => $target_country ? $target_country : null
+                'targetCountry' => $target_country ? $target_country : null,
+                'missingPlaceholder' => self::get_search_results_setting('missing_placeholder'),
+                'missingMessage' => self::get_search_results_setting('missing_message')
             ));
         }
     }
@@ -174,6 +176,8 @@ class Search_Posts_By_Address {
             'radius_label' => ''
         ), $atts, 'show_search_form');
         
+        $address_value = $_GET['address'] ?? '';
+
         // Get field labels from settings with fallbacks
         $address_label = $atts['address_label'] ?: self::get_search_form_setting('address_label');
         if (empty($address_label)) {
@@ -218,6 +222,7 @@ class Search_Posts_By_Address {
                         name="address" 
                         class="scp-address-input" 
                         placeholder="<?php echo esc_attr($placeholder); ?>"
+                        value="<?php echo esc_attr($address_value); ?>"
                         autocomplete="off"
                     />
                     <input type="hidden" id="scp-latitude" name="latitude" />
@@ -269,6 +274,8 @@ class Search_Posts_By_Address {
             'radius_label' => ''
         ), $atts, 'show_search_by_address_short_form');
         
+        $address_value = $_GET['address'] ?? '';
+
         // Get field labels from settings with fallbacks
         $address_label = $atts['address_label'] ?: self::get_search_form_setting('address_label');
         if (empty($address_label)) {
@@ -311,6 +318,7 @@ class Search_Posts_By_Address {
                     name="address" 
                     class="scp-address-input" 
                     placeholder="<?php echo esc_attr($placeholder); ?>"
+                    value="<?php echo esc_attr($address_value); ?>"
                     autocomplete="off"
                 />
                 <input type="hidden" id="scp-latitude-short" name="latitude" />
@@ -473,6 +481,10 @@ class Search_Posts_By_Address {
         // Generate unique map ID
         $map_id = 'scp-results-map-' . uniqid();
         
+        // Get no results settings
+        $missing_placeholder = self::get_search_results_setting('missing_placeholder');
+        $missing_message = self::get_search_results_setting('missing_message');
+        
         // Prepare map data for JavaScript
         $map_data = array(
             'mapId' => $map_id,
@@ -481,7 +493,9 @@ class Search_Posts_By_Address {
                 'longitude' => $search_longitude
             ),
             'radius' => $radius,
-            'posts' => $posts_data
+            'posts' => $posts_data,
+            'missingPlaceholder' => $missing_placeholder,
+            'missingMessage' => $missing_message
         );
         
         // Enqueue Google Maps if not already enqueued

@@ -11,6 +11,7 @@
     var infoWindow = null;
     
     $(document).ready(function() {
+
         // Check if map data is available
         if (typeof scpMapData === 'undefined') {
             console.error('Map data not available');
@@ -30,6 +31,13 @@
             }, 100);
         }
     });
+   
+    /**
+     * Escape special regex characters
+     */
+    function escapeRegex(text) {
+        return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
     
     /**
      * Initialize the map with markers
@@ -163,4 +171,6 @@
     }
     
 })(jQuery);
+
+
 

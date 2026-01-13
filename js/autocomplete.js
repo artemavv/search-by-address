@@ -15,6 +15,8 @@
         } else {
             console.error('Google Maps API not loaded');
         }
+        // Update no results message with address from GET parameters
+        updateNoResultsMessage();
     });
     
     /**
@@ -124,6 +126,7 @@
             var latitude = $('#' + latId).val();
             var longitude = $('#' + lngId).val();
             var radius = $('#' + radiusId).val();
+            var fullAddress = $('#' + fullAddressId).val();
 
             if (!latitude || !longitude) {
                 return;
@@ -141,6 +144,7 @@
             url.searchParams.set('latitude', latitude);
             url.searchParams.set('longitude', longitude);
             url.searchParams.set('radius', radius);
+            url.searchParams.set('address', fullAddress);
             
             // Redirect to target URL with parameters
             window.location.href = url.toString();
@@ -290,6 +294,90 @@
             address: fullAddress
         });
     }
+
+     
+    /**
+     * Update no results message with address from GET parameters
+     */
+    function updateNoResultsMessage() {
+        // Get settings from map data
+        var placeholder = (typeof scpData !== 'undefined' && scpData.missingPlaceholder) ? scpData.missingPlaceholder : '';
+        var message = (typeof scpData !== 'undefined' && scpData.missingMessage) ? scpData.missingMessage : '';
+        
+
+        console.log('scpData', scpData);
+        console.log('placeholder', placeholder);
+        console.log('message', message);
+        // If no placeholder or message is configured, skip
+        if (!placeholder || !message) {
+            return;
+        }
+        
+        // Get address from URL GET parameters
+        var urlParams = new URLSearchParams(window.location.search);
+        var address = urlParams.get('address');
+        
+        if (!address) {
+            return;
+        }
+        
+        // Replace {address} placeholder in message with actual address
+        var finalMessage = message.replace(/{address}/gi, address);
+        
+        // Search for the placeholder marker - first in the specific div with class 'w-grid-none type_message'
+        var noResultsDiv = document.querySelector('.w-grid-none.type_message');
+        
+        if (noResultsDiv) {
+            // Check if the div contains the placeholder marker
+            var divText = noResultsDiv.textContent || noResultsDiv.innerText || '';
+            var divHtml = noResultsDiv.innerHTML || '';
+            
+            if (divText.indexOf(placeholder) !== -1 || divHtml.indexOf(placeholder) !== -1) {
+                // Replace placeholder marker with the message
+                if (divHtml && divHtml.indexOf(placeholder) !== -1) {
+                    // Replace in HTML while preserving structure
+                    noResultsDiv.innerHTML = divHtml.replace(new RegExp(escapeRegex(placeholder), 'gi'), escapeHtml(finalMessage));
+                } else {
+                    // Replace in text content
+                    noResultsDiv.textContent = divText.replace(new RegExp(escapeRegex(placeholder), 'gi'), finalMessage);
+                }
+                return;
+            }
+        }
+        
+        // If not found in the specific div, search the entire document for the placeholder
+        // Find all elements that might contain the placeholder
+        var allElements = document.querySelectorAll('*');
+        for (var i = 0; i < allElements.length; i++) {
+            var element = allElements[i];
+            var elementHtml = element.innerHTML || '';
+            var elementText = element.textContent || element.innerText || '';
+            
+            // Check if element contains the placeholder
+            if (elementHtml.indexOf(placeholder) !== -1) {
+                // Replace in innerHTML
+                element.innerHTML = elementHtml.replace(new RegExp(escapeRegex(placeholder), 'gi'), escapeHtml(finalMessage));
+                return; // Found and replaced, exit
+            } else if (elementText.indexOf(placeholder) !== -1 && element.children.length === 0) {
+                // Only replace text content for leaf nodes (no children)
+                element.textContent = elementText.replace(new RegExp(escapeRegex(placeholder), 'gi'), finalMessage);
+                return; // Found and replaced, exit
+            }
+        }
+    }
     
+    /**
+     * Escape special regex characters
+     */
+    function escapeRegex(text) {
+        return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    
+    /**
+     * Escape HTML characters
+     */
+    function escapeHtml(text) {
+        return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
 })(jQuery);
 
