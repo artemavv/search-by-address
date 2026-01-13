@@ -150,10 +150,11 @@ class Search_Posts_By_Address {
             $query_args['post__in'] = $post_ids;
             $query_args['orderby'] = 'post__in';
             $query_args['posts_per_page'] = -1; // TODO: add pagination
-        }
-        else {
-            // Modify query to return no posts 
-            $query_args['post__in'] = array(0);
+
+            if ( empty($post_ids) ) {
+                // Modify query to return no posts 
+                $query_args['post__in'] = array(0);
+            }
         }
         
         return $query_args;
@@ -441,7 +442,7 @@ class Search_Posts_By_Address {
         $post_ids = $this->search_posts_by_latitude_longitude($search_latitude, $search_longitude, $radius);
         
         if (empty($post_ids)) {
-            return '<div class="scp-map-no-results">No posts found within the specified radius.</div>';
+            return '<div class="scp-map-no-results"></div>';
         }
         
         // Get post data with coordinates
