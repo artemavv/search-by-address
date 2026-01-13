@@ -3,7 +3,7 @@
  * Plugin Name: Search Posts By Address
  * Plugin URI: https://example.com/search-posts-by-address
  * Description: A plugin that provides search functionality with Google Maps Autocomplete for custom posts.
- * Version: 0.3
+ * Version: 0.5
  * Author: Artem Avvakumov
  * Author URI: https://example.com
  * License: GPL v2 or later
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('SCP_VERSION', '0.3');
+define('SCP_VERSION', '0.5');
 define('SCP_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SCP_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -26,6 +26,9 @@ require_once SCP_PLUGIN_DIR . 'scp-settings.php';
 
 // Include country codes file
 require_once SCP_PLUGIN_DIR . 'country-codes.php';
+
+// Include create mass test posts file
+require_once SCP_PLUGIN_DIR . 'create-mass-test-posts.php';
 
 /**
  * Main plugin class
@@ -148,12 +151,15 @@ class Search_Posts_By_Address {
 
         if ( ! empty($latitude) && ! empty($longitude) && ! empty($radius) ) {
             // Modify query to return posts by latitude, longitude and radius
-            $post_ids = $this->search_posts_by_latitude_longitude($latitude, $longitude, $radius);
-            $query_args['post__in'] = $post_ids;
-            $query_args['orderby'] = 'post__in';
-            $query_args['posts_per_page'] = -1; // TODO: add pagination
-
-            if ( empty($post_ids) ) {
+            $post_ids = $this->search_posts_by_latitude_longitude($latitude, $longitude, $radius, false);
+            
+            if ( ! empty($post_ids) ) {
+                $query_args['post__in'] = $post_ids;
+                $query_args['orderby'] = 'post__in';
+                $query_args['posts_per_page'] = self::get_search_results_setting('posts_per_page');
+    
+            }
+            else {
                 // Modify query to return no posts 
                 $query_args['post__in'] = array(0);
             }
@@ -176,6 +182,9 @@ class Search_Posts_By_Address {
             'radius_label' => ''
         ), $atts, 'show_search_form');
         
+        $address_value = $_GET['address'] ?? '';
+        $latitude_value = $_GET['latitude'] ?? '';
+        $longitude_value = $_GET['longitude'] ?? '';
         $address_value = $_GET['address'] ?? '';
 
         // Get field labels from settings with fallbacks
@@ -225,9 +234,9 @@ class Search_Posts_By_Address {
                         value="<?php echo esc_attr($address_value); ?>"
                         autocomplete="off"
                     />
-                    <input type="hidden" id="scp-latitude" name="latitude" />
-                    <input type="hidden" id="scp-longitude" name="longitude" />
-                    <input type="hidden" id="scp-full-address" name="full_address" />
+                    <input type="hidden" id="scp-latitude" name="latitude" value="<?php echo esc_attr($latitude_value); ?>" />
+                    <input type="hidden" id="scp-longitude" name="longitude" value="<?php echo esc_attr($longitude_value); ?>" />
+                    <input type="hidden" id="scp-full-address" name="address" value="<?php echo esc_attr($address_value); ?>" />
                 </div>
                 <div class="scp-form-group">
                     <label for="scp-radius" class="scp-label"><?php echo esc_html($radius_label); ?></label>
@@ -275,6 +284,9 @@ class Search_Posts_By_Address {
         ), $atts, 'show_search_by_address_short_form');
         
         $address_value = $_GET['address'] ?? '';
+        $latitude_value = $_GET['latitude'] ?? '';
+        $longitude_value = $_GET['longitude'] ?? '';
+        $address_value = $_GET['address'] ?? '';
 
         // Get field labels from settings with fallbacks
         $address_label = $atts['address_label'] ?: self::get_search_form_setting('address_label');
@@ -321,9 +333,9 @@ class Search_Posts_By_Address {
                     value="<?php echo esc_attr($address_value); ?>"
                     autocomplete="off"
                 />
-                <input type="hidden" id="scp-latitude-short" name="latitude" />
-                <input type="hidden" id="scp-longitude-short" name="longitude" />
-                <input type="hidden" id="scp-full-address-short" name="full_address" />
+                <input type="hidden" id="scp-latitude-short" name="latitude" value="<?php echo esc_attr($latitude_value); ?>" />
+                <input type="hidden" id="scp-longitude-short" name="longitude" value="<?php echo esc_attr($longitude_value); ?>" />
+                <input type="hidden" id="scp-full-address-short" name="address" value="<?php echo esc_attr($address_value); ?>" />
                 <select id="scp-radius-short" name="radius" class="scp-radius-select">
                     <?php
                     $radius_options = self::get_search_form_setting('radius_options');
@@ -355,7 +367,7 @@ class Search_Posts_By_Address {
      * @param float $radius Search radius in meters
      * @return array IDs of posts within the radius
      */
-    public function search_posts_by_latitude_longitude( $latitude, $longitude, $radius  ) {
+    public function search_posts_by_latitude_longitude( $latitude, $longitude, $radius, $respect_pagination = true ) {
         global $wpdb;
         
         $meta_key_latitude = self::get_search_results_setting('meta_key_latitude');
@@ -371,6 +383,18 @@ class Search_Posts_By_Address {
         $latitude = floatval($latitude);
         $longitude = floatval($longitude);
         $radius = floatval($radius);
+        
+        if ( $respect_pagination ) {
+            // Get pagination parameters
+            $paged = get_query_var('paged') ? intval(get_query_var('paged')) : 1;
+            $posts_per_page = self::get_search_results_setting('posts_per_page');
+            $posts_per_page = !empty($posts_per_page) ? intval($posts_per_page) : get_option('posts_per_page', 10);
+            $offset = ($paged - 1) * $posts_per_page;
+        }
+        else {
+            $offset = 0;
+            $posts_per_page = 9999999; // No limit
+        }
         
         // Get table names
         $posts_table = $wpdb->posts;
@@ -394,7 +418,8 @@ class Search_Posts_By_Address {
                     point(CAST(pm_lng.meta_value AS DECIMAL(10,8)), CAST(pm_lat.meta_value AS DECIMAL(10,8))),
                     point(%f, %f)
                 ) <= %f
-            ORDER BY distance_meters ASC",
+            ORDER BY distance_meters ASC
+            LIMIT %d OFFSET %d",
             $longitude, // Target longitude
             $latitude,  // Target latitude
             $meta_key_latitude,
@@ -402,7 +427,9 @@ class Search_Posts_By_Address {
             $post_type,
             $longitude, // Target longitude (for WHERE clause)
             $latitude,  // Target latitude (for WHERE clause)
-            $radius     // Radius in meters
+            $radius,    // Radius in meters
+            $posts_per_page, // LIMIT
+            $offset     // OFFSET
         );
         
         if ( isset( $_GET['debug_mode'] ) && $_GET['debug_mode'] == '1' ) {

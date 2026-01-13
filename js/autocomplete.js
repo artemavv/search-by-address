@@ -7,14 +7,35 @@
     var map = null;
     var marker = null;
     var circle = null;
-    
+    console.log('[Autocomplete] jQuery loaded');
     $(document).ready(function() {
+
+        console.log('[Autocomplete] Document ready');
         // Initialize Google Maps Autocomplete
-        if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-            initAutocomplete();
-        } else {
-            console.error('Google Maps API not loaded');
+        // Wait for Google Maps API to be fully loaded
+        function waitForGoogleMaps(callback, maxAttempts) {
+            maxAttempts = maxAttempts || 50; // Try for up to 5 seconds (50 * 100ms)
+            var attempts = 0;
+            
+            function checkGoogleMaps() {
+                attempts++;
+                if (typeof google !== 'undefined' && google.maps && google.maps.places && google.maps.places.Autocomplete) {
+                    console.log('[Autocomplete] Google Maps API loaded after ' + attempts + ' attempts');
+                    callback();
+                } else if (attempts < maxAttempts) {
+                    setTimeout(checkGoogleMaps, 100);
+                } else {
+                    console.error('[Autocomplete] Google Maps API not loaded after ' + maxAttempts + ' attempts');
+                }
+            }
+            
+            checkGoogleMaps();
         }
+        
+        waitForGoogleMaps(function() {
+            initAutocomplete();
+        });
+        
         // Update no results message with address from GET parameters
         updateNoResultsMessage();
     });
@@ -23,6 +44,9 @@
      * Initialize Google Maps Autocomplete
      */
     function initAutocomplete() {
+
+        console.log('[Autocomplete] Initializing autocomplete');
+
         // Get target country from localized data
         var targetCountry = (typeof scpData !== 'undefined' && scpData.targetCountry) ? scpData.targetCountry : null;
         
@@ -62,6 +86,7 @@
         var addressInput = document.getElementById(inputId);
         
         if (!addressInput) {
+            console.log('[Autocomplete] Input element not found:', inputId);
             return;
         }
         
@@ -76,13 +101,27 @@
         }
         
         // Create Autocomplete instance
+        // Note: fields option is used to get only the data we need
+        autocompleteOptions.fields = ['geometry', 'formatted_address', 'name'];
         var autocomplete = new google.maps.places.Autocomplete(addressInput, autocompleteOptions);
         
-        // When a place is selected, get the details
-        autocomplete.addListener('place_changed', function() {
-            var place = autocomplete.getPlace();
-            
-            if (!place.geometry) {
+        console.log('[Autocomplete] Initialized for input:', {
+            inputId: inputId,
+            formId: formId,
+            targetCountry: targetCountry || 'none',
+            showMap: showMap,
+            hasValue: addressInput.value ? 'yes' : 'no'
+        });
+        
+        // Function to handle place selection and populate fields
+        function handlePlaceSelection(place) {
+            if (!place || !place.geometry) {
+                console.log('[Autocomplete] Place selected but geometry is missing:', {
+                    inputId: inputId,
+                    place: place,
+                    placeName: place ? (place.name || 'Unknown') : 'No place',
+                    formattedAddress: place ? (place.formatted_address || 'N/A') : 'N/A'
+                });
                 return;
             }
             
@@ -104,13 +143,64 @@
             }
             
             // Log for debugging (remove in production)
-            console.log('Selected address:', {
+            console.log('[Autocomplete] Place successfully selected:', {
+                inputId: inputId,
                 fullAddress: fullAddress,
                 latitude: lat,
                 longitude: lng,
                 place: place
             });
+        }
+        
+        // When a place is selected, get the details
+        autocomplete.addListener('place_changed', function() {
+            console.log('[Autocomplete] place_changed event fired for:', inputId);
+            var place = autocomplete.getPlace();
+            handlePlaceSelection(place);
         });
+        
+        // If input has a pre-filled value from GET parameters, geocode it
+        if (addressInput.value) {
+            var existingLat = $('#' + latId).val();
+            var existingLng = $('#' + lngId).val();
+            
+            // Only geocode if latitude/longitude are not already set
+            if (!existingLat || !existingLng) {
+                console.log('[Autocomplete] Input has pre-filled value, geocoding address:', addressInput.value);
+                
+                // Use PlacesService to find the place by the address string
+                var geocoder = new google.maps.Geocoder();
+                var geocodeRequest = {
+                    address: addressInput.value
+                };
+                
+                // Add country restriction if target country is set
+                if (targetCountry) {
+                    geocodeRequest.componentRestrictions = { country: targetCountry };
+                }
+                
+                geocoder.geocode(geocodeRequest, function(results, status) {
+                    if (status === 'OK' && results && results.length > 0) {
+                        // Convert GeocoderResult to Place-like object
+                        var result = results[0];
+                        var place = {
+                            geometry: {
+                                location: result.geometry.location
+                            },
+                            formatted_address: result.formatted_address,
+                            name: result.formatted_address
+                        };
+                        
+                        console.log('[Autocomplete] Geocoding successful for pre-filled address');
+                        handlePlaceSelection(place);
+                    } else {
+                        console.log('[Autocomplete] Geocoding failed for pre-filled address:', status);
+                    }
+                });
+            } else {
+                console.log('[Autocomplete] Input has pre-filled value and coordinates already exist, skipping geocoding');
+            }
+        }
         
         // Handle radius change (only for regular form with map)
         if (showMap) {
@@ -129,6 +219,14 @@
             var fullAddress = $('#' + fullAddressId).val();
 
             if (!latitude || !longitude) {
+                console.log('[Autocomplete] Form submitted but coordinates are missing:', {
+                    formId: formId,
+                    inputId: inputId,
+                    latitude: latitude || 'missing',
+                    longitude: longitude || 'missing',
+                    fullAddress: fullAddress || 'missing',
+                    addressInputValue: addressInput.value || 'empty'
+                });
                 return;
             }
             
@@ -136,13 +234,17 @@
             var targetUrl = $(this).attr('target');
             
             if (!targetUrl) {
+                console.log('[Autocomplete] Form submitted but target URL is missing:', {
+                    formId: formId,
+                    inputId: inputId
+                });
                 return;
             }
             
             // Build URL with query parameters
             var url = new URL(targetUrl, window.location.origin);
-            url.searchParams.set('latitude', latitude);
-            url.searchParams.set('longitude', longitude);
+            url.searchParams.set('latitude', parseFloat(latitude).toFixed(6));
+            url.searchParams.set('longitude', parseFloat(longitude).toFixed(6));
             url.searchParams.set('radius', radius);
             url.searchParams.set('address', fullAddress);
             
@@ -325,8 +427,8 @@
         var finalMessage = message.replace(/{address}/gi, address);
         
         // Search for the placeholder marker - first in the specific div with class 'w-grid-none type_message'
-        var noResultsDiv = document.querySelector('.w-grid-none.type_message');
-        
+        var noResultsDiv = document.querySelector('.w-grid-none.type_message'); // TODO - add settings in admin panel to select the div to replace the placeholder marker
+      
         if (noResultsDiv) {
             // Check if the div contains the placeholder marker
             var divText = noResultsDiv.textContent || noResultsDiv.innerText || '';
@@ -342,26 +444,6 @@
                     noResultsDiv.textContent = divText.replace(new RegExp(escapeRegex(placeholder), 'gi'), finalMessage);
                 }
                 return;
-            }
-        }
-        
-        // If not found in the specific div, search the entire document for the placeholder
-        // Find all elements that might contain the placeholder
-        var allElements = document.querySelectorAll('*');
-        for (var i = 0; i < allElements.length; i++) {
-            var element = allElements[i];
-            var elementHtml = element.innerHTML || '';
-            var elementText = element.textContent || element.innerText || '';
-            
-            // Check if element contains the placeholder
-            if (elementHtml.indexOf(placeholder) !== -1) {
-                // Replace in innerHTML
-                element.innerHTML = elementHtml.replace(new RegExp(escapeRegex(placeholder), 'gi'), escapeHtml(finalMessage));
-                return; // Found and replaced, exit
-            } else if (elementText.indexOf(placeholder) !== -1 && element.children.length === 0) {
-                // Only replace text content for leaf nodes (no children)
-                element.textContent = elementText.replace(new RegExp(escapeRegex(placeholder), 'gi'), finalMessage);
-                return; // Found and replaced, exit
             }
         }
     }

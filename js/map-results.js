@@ -14,7 +14,7 @@
 
         // Check if map data is available
         if (typeof scpMapData === 'undefined') {
-            console.error('Map data not available');
+            console.log('Map data not available');
             return;
         }
         
@@ -46,7 +46,7 @@
         var mapElement = document.getElementById(scpMapData.mapId);
         
         if (!mapElement) {
-            console.error('Map element not found');
+            console.log('Map element not found');
             return;
         }
         
@@ -54,6 +54,11 @@
         var searchLng = scpMapData.searchLocation.longitude;
         var radius = scpMapData.radius;
         var posts = scpMapData.posts;
+
+        console.log('searchLat', searchLat);
+        console.log('searchLng', searchLng);
+        console.log('radius', radius);
+        console.log('posts', posts);
         
         // Initialize map centered on search location
         map = new google.maps.Map(mapElement, {
