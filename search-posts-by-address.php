@@ -3,12 +3,13 @@
  * Plugin Name: Search Posts By Address
  * Plugin URI: https://example.com/search-posts-by-address
  * Description: A plugin that provides search functionality with Google Maps Autocomplete for custom posts.
- * Version: 0.5
+ * Version: 0.6
  * Author: Artem Avvakumov
  * Author URI: https://example.com
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: search-posts-by-address
+ * Domain Path: /languages
  */
 
 // Exit if accessed directly
@@ -17,9 +18,10 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('SCP_VERSION', '0.5');
+define('SCP_VERSION', '0.6');
 define('SCP_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SCP_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('SCP_TEXTDOMAIN', 'search-posts-by-address');
 
 // Include settings file
 require_once SCP_PLUGIN_DIR . 'scp-settings.php';
@@ -39,8 +41,20 @@ class Search_Posts_By_Address {
      * Constructor
      */
     public function __construct() {
+        add_action('plugins_loaded', array($this, 'load_textdomain'));
         add_action('init', array($this, 'init'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+    }
+    
+    /**
+     * Load plugin textdomain for translations
+     */
+    public function load_textdomain() {
+        load_plugin_textdomain(
+            SCP_TEXTDOMAIN,
+            false,
+            dirname(plugin_basename(__FILE__)) . '/languages/'
+        );
     }
     
     /**
@@ -190,22 +204,22 @@ class Search_Posts_By_Address {
         // Get field labels from settings with fallbacks
         $address_label = $atts['address_label'] ?: self::get_search_form_setting('address_label');
         if (empty($address_label)) {
-            $address_label = 'Address';
+            $address_label = __('Address', SCP_TEXTDOMAIN);
         }
         
         $radius_label = $atts['radius_label'] ?: self::get_search_form_setting('radius_label');
         if (empty($radius_label)) {
-            $radius_label = 'Search Radius';
+            $radius_label = __('Search Radius', SCP_TEXTDOMAIN);
         }
         
         $submit_button_title = $atts['button_text'] ?: self::get_search_form_setting('submit_button_title');
         if (empty($submit_button_title)) {
-            $submit_button_title = 'Search';
+            $submit_button_title = __('Search', SCP_TEXTDOMAIN);
         }
 
         $placeholder = $atts['placeholder'] ?: self::get_search_form_setting('placeholder');
         if (empty($placeholder)) {
-            $placeholder = 'Enter an address...';
+            $placeholder = __('Enter an address...', SCP_TEXTDOMAIN);
         }
         
         $target_page_id = self::get_search_results_setting('target_page');
@@ -291,22 +305,22 @@ class Search_Posts_By_Address {
         // Get field labels from settings with fallbacks
         $address_label = $atts['address_label'] ?: self::get_search_form_setting('address_label');
         if (empty($address_label)) {
-            $address_label = 'Address';
+            $address_label = __('Address', SCP_TEXTDOMAIN);
         }
         
         $radius_label = $atts['radius_label'] ?: self::get_search_form_setting('radius_label');
         if (empty($radius_label)) {
-            $radius_label = 'Search Radius';
+            $radius_label = __('Search Radius', SCP_TEXTDOMAIN);
         }
         
         $submit_button_title = $atts['button_text'] ?: self::get_search_form_setting('submit_button_title');
         if (empty($submit_button_title)) {
-            $submit_button_title = 'Search';
+            $submit_button_title = __('Search', SCP_TEXTDOMAIN);
         }
 
         $placeholder = $atts['placeholder'] ?: self::get_search_form_setting('placeholder');
         if (empty($placeholder)) {
-            $placeholder = 'Enter an address...';
+            $placeholder = __('Enter an address...', SCP_TEXTDOMAIN);
         }
         
         $target_page_id = self::get_search_results_setting('target_page');
@@ -467,7 +481,7 @@ class Search_Posts_By_Address {
         
         // Validate search parameters
         if (empty($search_latitude) || empty($search_longitude)) {
-            return '<div class="scp-map-error">Please provide latitude and longitude parameters.</div>';
+            return '<div class="scp-map-error">' . esc_html__('Sorry, the search results are not available (location is not provided).', SCP_TEXTDOMAIN) . '</div>';
         }
         
         $meta_key_latitude = self::get_search_results_setting('meta_key_latitude');

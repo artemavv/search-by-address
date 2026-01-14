@@ -28,10 +28,10 @@ class SCP_Settings {
      */
     public function add_admin_menu() {
         add_options_page(
-            'Search by Address',           // Page title
-            'Search by Address',           // Menu title
+            __('Search by Address', SCP_TEXTDOMAIN),           // Page title
+            __('Search by Address', SCP_TEXTDOMAIN),           // Menu title
             'manage_options',              // Capability
-            'search-posts-by-address',     // Menu slug
+            SCP_TEXTDOMAIN,     // Menu slug
             array($this, 'render_admin_page') // Callback function
         );
     }
@@ -236,87 +236,87 @@ class SCP_Settings {
     public function add_search_form_fields() {
         add_settings_section(
             'scp_search_form_section',
-            'Search Form Settings',
+            __('Search Form Settings', SCP_TEXTDOMAIN),
             array($this, 'render_search_form_section'),
-            'search-posts-by-address'
+            SCP_TEXTDOMAIN
         );
         
         add_settings_field(
             'scp_search_form_title',
-            'Search Form Title',
+            __('Search Form Title', SCP_TEXTDOMAIN),
             array($this, 'render_search_form_title_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_form_section'
         );
 
         add_settings_field(
             'scp_search_form_submit_button_title',
-            'Submit Button Title',
+            __('Submit Button Title', SCP_TEXTDOMAIN),
             array($this, 'render_search_form_submit_button_title_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_form_section'
         );
 
         add_settings_field(
             'scp_search_form_submit_button_icon',
-            'Submit Button Icon',
+            __('Submit Button Icon', SCP_TEXTDOMAIN),
             array($this, 'render_search_form_submit_button_icon_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_form_section'
         );
 
         add_settings_field(
             'scp_search_form_placeholder',
-            'Search Placeholder',
+            __('Search Placeholder', SCP_TEXTDOMAIN),
             array($this, 'render_search_form_placeholder_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_form_section'
         );
 
         add_settings_field(
             'scp_search_form_address_label',
-            'Address Field Label',
+            __('Address Field Label', SCP_TEXTDOMAIN),
             array($this, 'render_search_form_address_label_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_form_section'
         );
 
         add_settings_field(
             'scp_search_form_radius_label',
-            'Radius Field Label',
+            __('Radius Field Label', SCP_TEXTDOMAIN),
             array($this, 'render_search_form_radius_label_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_form_section'
         );
 
         add_settings_field(
             'scp_search_form_radius_options',
-            'Radius Field Options',
+            __('Radius Field Options', SCP_TEXTDOMAIN),
             array($this, 'render_search_form_radius_options_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_form_section'
         );
 
         add_settings_field(
             'scp_search_form_target_country',
-            'Target Country',
+            __('Target Country', SCP_TEXTDOMAIN),
             array($this, 'render_search_form_target_country_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_form_section'
         );
 
         add_settings_section(
             'scp_api_section',
-            'Google Maps API Settings',
+            __('Google Maps API Settings', SCP_TEXTDOMAIN),
             array($this, 'render_api_section'),
-            'search-posts-by-address'
+            SCP_TEXTDOMAIN
         );
         
         add_settings_field(
             'scp_google_api_key',
-            'Google Maps API Key',
+            __('Google Maps API Key', SCP_TEXTDOMAIN),
             array($this, 'render_api_key_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_api_section'
         );
 
@@ -328,66 +328,66 @@ class SCP_Settings {
     public function add_search_results_fields() {
         add_settings_section(
             'scp_search_results_section',
-            'Search Results',
+            __('Search Results', SCP_TEXTDOMAIN),
             array($this, 'render_search_results_section'),
-            'search-posts-by-address'
+            SCP_TEXTDOMAIN
         );
 
         add_settings_field(
             'scp_search_results_post_type',
-            'Post type to search in',
+            __('Post type to search in', SCP_TEXTDOMAIN),
             array($this, 'render_search_results_post_type_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_results_section'
         );
 
         
         add_settings_field(
             'scp_search_results_posts_per_page',
-            'Posts Per Page',
+            __('Posts Per Page', SCP_TEXTDOMAIN),
             array($this, 'render_search_results_posts_per_page_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_results_section'
         );
 
         add_settings_field(
             'scp_search_results_target_page',
-            'Page to Redirect to',
+            __('Page to Redirect to', SCP_TEXTDOMAIN),
             array($this, 'render_search_results_target_page_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_results_section'
         );
 
 
         add_settings_field(
             'scp_search_results_meta_key_latitude',
-            'Meta Key for Latitude',
+            __('Meta Key for Latitude', SCP_TEXTDOMAIN),
             array($this, 'render_search_results_meta_key_latitude_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_results_section'
         );
 
         add_settings_field(
             'scp_search_results_meta_key_longitude',
-            'Meta Key for Longitude',
+            __('Meta Key for Longitude', SCP_TEXTDOMAIN),
             array($this, 'render_search_results_meta_key_longitude_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_results_section'
         );
 
         add_settings_field(
             'scp_search_results_missing_placeholder',
-            'No results placeholder marker',
+            __('No results placeholder marker', SCP_TEXTDOMAIN),
             array($this, 'render_search_results_missing_placeholder_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_results_section'
         );
 
         add_settings_field(
             'scp_search_results_missing_message',
-            'No results message',
+            __('No results message', SCP_TEXTDOMAIN),
             array($this, 'render_search_results_missing_message_field'),
-            'search-posts-by-address',
+            SCP_TEXTDOMAIN,
             'scp_search_results_section'
         );
     }
@@ -396,7 +396,7 @@ class SCP_Settings {
      * Render Search Form section description
      */
     public function render_search_form_section() {
-        echo '<p>Configure the search form settings.</p>';
+        echo '<p>' . esc_html__('Configure the search form settings.', SCP_TEXTDOMAIN) . '</p>';
     }
     
     /**
@@ -411,7 +411,7 @@ class SCP_Settings {
             name="scp_search_form_title"
             value="<?php echo esc_attr($title); ?>"
             class="regular-text"
-            placeholder="Enter the search form title"
+            placeholder="<?php echo esc_attr__('Enter the search form title', SCP_TEXTDOMAIN); ?>"
         />
         <?php
     }
@@ -428,7 +428,7 @@ class SCP_Settings {
             name="scp_search_form_submit_button_title"
             value="<?php echo esc_attr($submit_button_title); ?>"
             class="regular-text"
-            placeholder="Enter the submit button title"
+            placeholder="<?php echo esc_attr__('Enter the submit button title', SCP_TEXTDOMAIN); ?>"
         />
         <?php
     }
@@ -442,14 +442,28 @@ class SCP_Settings {
             name="scp_search_form_submit_button_icon"
             value="<?php echo esc_attr($submit_button_icon); ?>"
             class="regular-text"
-            placeholder="Enter the submit button icon"
+            placeholder="<?php echo esc_attr__('Enter the submit button icon', SCP_TEXTDOMAIN); ?>"
         />
         <p class="description">
-            Enter the icon code for the submit button.
-            E.g. search, location_on, location_off, etc.
+            <?php echo esc_html__('Enter the icon code for the submit button.', SCP_TEXTDOMAIN); ?>
+            <?php echo esc_html__('E.g. search, location_on, location_off, etc.', SCP_TEXTDOMAIN); ?>
         </p>
         <p class="description">
-            You can find the icon code in the <a href="https://fonts.google.com/icons" target="_blank">Material Icons</a> list.
+            <?php
+            printf(
+                wp_kses(
+                    /* translators: %s: Material Icons URL */
+                    __('You can find the icon code in the <a href="%s" target="_blank">Material Icons</a> list.', SCP_TEXTDOMAIN),
+                    array(
+                        'a' => array(
+                            'href' => array(),
+                            'target' => array(),
+                        ),
+                    )
+                ),
+                esc_url('https://fonts.google.com/icons')
+            );
+            ?>
         </p>
         <?php
     }
@@ -466,7 +480,7 @@ class SCP_Settings {
             name="scp_search_form_address_label"
             value="<?php echo esc_attr($address_label); ?>"
             class="regular-text"
-            placeholder="Enter the address field label"
+            placeholder="<?php echo esc_attr__('Enter the address field label', SCP_TEXTDOMAIN); ?>"
         />
         <?php
     }
@@ -483,7 +497,7 @@ class SCP_Settings {
             name="scp_search_form_radius_label"
             value="<?php echo esc_attr($radius_label); ?>"
             class="regular-text"
-            placeholder="Enter the radius field label"
+            placeholder="<?php echo esc_attr__('Enter the radius field label', SCP_TEXTDOMAIN); ?>"
         />
         <?php
     }
@@ -496,11 +510,11 @@ class SCP_Settings {
             name="scp_search_form_radius_options"
             class="regular-text"
             rows="6"
-            placeholder="Enter the radius options - one per line."
+            placeholder="<?php echo esc_attr__('Enter the radius options - one per line.', SCP_TEXTDOMAIN); ?>"
         ><?php echo esc_textarea($radius_options); ?></textarea>
         <p class="description">
-            On  each line enter the radius option and the corresponding label separated by a comma.
-            E.g. 500, 500 meters
+            <?php echo esc_html__('On each line enter the radius option and the corresponding label separated by a comma.', SCP_TEXTDOMAIN); ?>
+            <?php echo esc_html__('E.g. 500, 500 meters', SCP_TEXTDOMAIN); ?>
   
         </p>
         <?php
@@ -518,7 +532,7 @@ class SCP_Settings {
             name="scp_search_form_placeholder"
             value="<?php echo esc_attr($placeholder); ?>"
             class="regular-text"
-            placeholder="Enter the search placeholder"
+            placeholder="<?php echo esc_attr__('Enter the search placeholder', SCP_TEXTDOMAIN); ?>"
         />
         <?php
     }
@@ -542,7 +556,7 @@ class SCP_Settings {
             <?php endforeach; ?>
         </select>
         <p class="description">
-            Select the target country to restrict address autocomplete results to a specific country.
+            <?php echo esc_html__('Select the target country to restrict address autocomplete results to a specific country.', SCP_TEXTDOMAIN); ?>
         </p>
         <?php
     }
@@ -551,7 +565,7 @@ class SCP_Settings {
      * Render Search Results section description
      */
     public function render_search_results_section() {
-        echo '<p>Configure the search results settings.</p>';
+        echo '<p>' . esc_html__('Configure the search results settings.', SCP_TEXTDOMAIN) . '</p>';
     }
     
     public function render_search_results_post_type_field() {
@@ -566,7 +580,7 @@ class SCP_Settings {
             name="scp_search_results_post_type"
             class="regular-text"
         >
-            <option value=""><?php echo esc_html__('-- Select a post type --', 'search-posts-by-address'); ?></option>
+            <option value=""><?php echo esc_html__('-- Select a post type --', SCP_TEXTDOMAIN); ?></option>
             <?php foreach ($post_types as $post_type) : ?>
                 <option value="<?php echo esc_attr($post_type->name); ?>" <?php selected($selected_post_type, $post_type->name); ?>>
                     <?php echo esc_html($post_type->label); ?>
@@ -585,7 +599,7 @@ class SCP_Settings {
             name="scp_search_results_meta_key_latitude"
             value="<?php echo esc_attr($meta_key_latitude); ?>"
             class="regular-text"
-            placeholder="Enter the meta key for latitude"
+            placeholder="<?php echo esc_attr__('Enter the meta key for latitude', SCP_TEXTDOMAIN); ?>"
         />
         <?php
     }
@@ -599,7 +613,7 @@ class SCP_Settings {
             name="scp_search_results_meta_key_longitude"
             value="<?php echo esc_attr($meta_key_longitude); ?>"
             class="regular-text"
-            placeholder="Enter the meta key for longitude"
+            placeholder="<?php echo esc_attr__('Enter the meta key for longitude', SCP_TEXTDOMAIN); ?>"
         />
         <?php
     }
@@ -615,7 +629,7 @@ class SCP_Settings {
             name="scp_search_results_posts_per_page"
             value="<?php echo esc_attr($posts_per_page); ?>"
             class="regular-text"
-            placeholder="Enter the number of posts to display per page"
+            placeholder="<?php echo esc_attr__('Enter the number of posts to display per page', SCP_TEXTDOMAIN); ?>"
         />
         <?php
     }
@@ -635,7 +649,7 @@ class SCP_Settings {
             name="scp_search_results_target_page"
             class="regular-text"
         >
-            <option value=""><?php echo esc_html__('-- Select a page --', 'search-posts-by-address'); ?></option>
+            <option value=""><?php echo esc_html__('-- Select a page --', SCP_TEXTDOMAIN); ?></option>
             <?php foreach ($pages as $page) : ?>
                 <option value="<?php echo esc_attr($page->ID); ?>" <?php selected($target_page, $page->ID); ?>>
                     <?php echo esc_html($page->post_title); ?>
@@ -643,7 +657,7 @@ class SCP_Settings {
             <?php endforeach; ?>
         </select>
         <p class="description">
-            <?php echo esc_html__('Select the page where search results will be displayed.', 'search-posts-by-address'); ?>
+            <?php echo esc_html__('Select the page where search results will be displayed.', SCP_TEXTDOMAIN); ?>
         </p>
         <?php
     }
@@ -660,12 +674,12 @@ class SCP_Settings {
             name="scp_search_results_missing_placeholder"
             value="<?php echo esc_attr($placeholder); ?>"
             class="regular-text"
-            placeholder="Enter the no results placeholder marker"
+            placeholder="<?php echo esc_attr__('Enter the no results placeholder marker', SCP_TEXTDOMAIN); ?>"
         />
         <p class="description">
-            You can use a placeholder marker to display a message when no results are found. A text entered here will be replaced with the correct message when no results are found.
-            <br>You can place this marker anywhere in the page. 
-            <br>In 'Post List' settings you can place the marker under 'Action when no results found' section ('Order & Quantity' tab)
+            <?php echo esc_html__('You can use a placeholder marker to display a message when no results are found. A text entered here will be replaced with the correct message when no results are found.', SCP_TEXTDOMAIN); ?>
+            <br><?php echo esc_html__('You can place this marker anywhere in the page.', SCP_TEXTDOMAIN); ?>
+            <br><?php echo esc_html__("In 'Post List' settings you can place the marker under 'Action when no results found' section ('Order & Quantity' tab)", SCP_TEXTDOMAIN); ?>
         </p>
         <?php
     }
@@ -682,11 +696,11 @@ class SCP_Settings {
             name="scp_search_results_missing_message"
             value="<?php echo esc_attr($message); ?>"
             class="regular-text"
-            placeholder="Enter the no results message"
+            placeholder="<?php echo esc_attr__('Enter the no results message', SCP_TEXTDOMAIN); ?>"
         />
         <p class="description">
-            A text entered here will be used as a message when no results are found - it will replace 'placeholder marker' defined above.
-            <br>You can use {address} in the message text - it will be replaced with the actual address searched for.
+            <?php echo esc_html__("A text entered here will be used as a message when no results are found - it will replace 'placeholder marker' defined above.", SCP_TEXTDOMAIN); ?>
+            <br><?php echo esc_html__('You can use {address} in the message text - it will be replaced with the actual address searched for.', SCP_TEXTDOMAIN); ?>
         </p>
         <?php
     }
@@ -695,7 +709,7 @@ class SCP_Settings {
      * Render API section description
      */
     public function render_api_section() {
-        echo '<p>Enter your Google Maps API key to enable the address autocomplete functionality.</p>';
+        echo '<p>' . esc_html__('Enter your Google Maps API key to enable the address autocomplete functionality.', SCP_TEXTDOMAIN) . '</p>';
     }
     
     /**
@@ -710,11 +724,25 @@ class SCP_Settings {
             name="scp_google_api_key" 
             value="<?php echo esc_attr($api_key); ?>" 
             class="regular-text"
-            placeholder="Enter your Google Maps API key"
+            placeholder="<?php echo esc_attr__('Enter your Google Maps API key', SCP_TEXTDOMAIN); ?>"
         />
         <p class="description">
-            Get your API key from the <a href="https://console.cloud.google.com/google/maps-apis/credentials" target="_blank">Google Cloud Console</a>. 
-            Make sure to enable the Maps JavaScript API and Places API.
+            <?php
+            printf(
+                wp_kses(
+                    /* translators: %s: Google Cloud Console URL */
+                    __('Get your API key from the <a href="%s" target="_blank">Google Cloud Console</a>.', SCP_TEXTDOMAIN),
+                    array(
+                        'a' => array(
+                            'href' => array(),
+                            'target' => array(),
+                        ),
+                    )
+                ),
+                esc_url('https://console.cloud.google.com/google/maps-apis/credentials')
+            );
+            ?>
+            <?php echo esc_html__('Make sure to enable the Maps JavaScript API and Places API.', SCP_TEXTDOMAIN); ?>
         </p>
         <?php
     }
@@ -736,17 +764,17 @@ class SCP_Settings {
             <form action="options.php" method="post">
                 <?php
                 settings_fields('scp_settings_group');
-                do_settings_sections('search-posts-by-address');
-                submit_button('Save Settings');
+                do_settings_sections(SCP_TEXTDOMAIN);
+                submit_button(__('Save Settings', SCP_TEXTDOMAIN));
                 ?>
             </form>
             <hr>
             <div class="scp-admin-content">
-                <h2>Usage</h2>
-                <p>Use the following shortcodes to display the search form and results:</p>
+                <h2><?php echo esc_html__('Usage', SCP_TEXTDOMAIN); ?></h2>
+                <p><?php echo esc_html__('Use the following shortcodes to display the search form and results:', SCP_TEXTDOMAIN); ?></p>
                 <ul>
-                    <li><code>[show_search_form]</code> - Displays the search form with address autocomplete</li>
-                    <li><code>[show_search_results]</code> - Displays the search results</li>
+                    <li><code>[show_search_form]</code> - <?php echo esc_html__('Displays the search form with address autocomplete', SCP_TEXTDOMAIN); ?></li>
+                    <li><code>[show_search_results]</code> - <?php echo esc_html__('Displays the search results', SCP_TEXTDOMAIN); ?></li>
                 </ul>
             </div>
         </div>
