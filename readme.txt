@@ -1,60 +1,88 @@
-=== Search Custom Posts ===
+=== Search Posts By Address ===
 Contributors: yourname
-Tags: search, custom posts, google maps, autocomplete
+Tags: search, custom posts, google maps, autocomplete, radius search
 Requires at least: 5.0
 Tested up to: 6.4
-Stable tag: 1.0.0
+Stable tag: 0.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A WordPress plugin that provides search functionality with Google Maps Autocomplete for custom posts.
+A WordPress plugin that provides address-based search functionality with Google Maps Autocomplete and radius filtering for custom posts.
 
 == Description ==
 
-Search Custom Posts is a WordPress plugin that provides two shortcodes:
-* `[show_search_form]` - Displays an address search form with Google Maps Autocomplete integration
-* `[show_search_results]` - Displays search results (placeholder for future implementation)
+Search Posts By Address is a WordPress plugin that allows users to search for posts (or custom post types) within a specific radius of a given address. It leverages the Google Maps API for address autocomplete and spatial calculations.
+
+Key Features:
+*   **Search Form**: Customizable search form with address autocomplete and radius selection.
+*   **Short Form**: Compact inline version of the search form.
+*   **Map Results**: Display search results on an interactive Google Map.
+*   **Radius Filtering**: Filters posts based on distance from the selected location.
+*   **Customizable**: Extensive settings for labels, placeholders, radius options, and result display.
+
+Available Shortcodes:
+*   `[show_search_by_address_form]` - Displays the standard search form.
+*   `[show_search_by_address_short_form]` - Displays a compact, inline search form.
+*   `[render_search_results_on_map]` - Displays search results on a Google Map.
 
 == Installation ==
 
-1. Upload the `search-custom-posts` folder to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Configure your Google Maps API key (see Configuration section)
-4. Use the shortcodes in your posts or pages
+1.  Upload the `search-posts-by-address` folder to the `/wp-content/plugins/` directory.
+2.  Activate the plugin through the 'Plugins' menu in WordPress.
+3.  Go to **Settings > Search by Address** to configure the plugin.
+4.  Enter your Google Maps API key (with Maps JavaScript API and Places API enabled).
+5.  Configure post types and meta keys for latitude/longitude storage.
+6.  Use the shortcodes in your posts or pages.
 
 == Configuration ==
 
-To use Google Maps Autocomplete, you need a Google Maps API key with the Places API enabled.
+**Google Maps API Key:**
+To use this plugin, you need a Google Maps API key with the **Maps JavaScript API** and **Places API** enabled.
+Enter the key in the plugin settings page.
 
-You can set the API key in one of two ways:
+**Post Setup:**
+Your posts must have latitude and longitude stored in custom fields (meta keys). Configure the specific meta key names in the plugin settings (e.g., `latitude` and `longitude`).
 
-1. In wp-config.php:
-   `define('SCP_GOOGLE_API_KEY', 'your-api-key-here');`
-
-2. Using a filter in your theme's functions.php:
-   `add_filter('scp_google_api_key', function() { return 'your-api-key-here'; });`
+**Settings Page:**
+Navigate to **Settings > Search by Address** to configure:
+*   **Search Form:** Titles, button text/icons, labels, placeholders, radius options, and target country for autocomplete.
+*   **Search Results:** Target post type, posts per page, target page for results, and coordinate meta keys.
 
 == Usage ==
 
-**Search Form Shortcode:**
-`[show_search_form]`
+**Standard Search Form:**
+`[show_search_by_address_form]`
 
-Optional attributes:
-* `placeholder` - Placeholder text for the address input (default: "Enter an address...")
-* `button_text` - Text for the search button (default: "Search")
+Attributes:
+*   `placeholder` - Placeholder text for the address input.
+*   `button_text` - Text for the search button.
+*   `address_label` - Label for the address field.
+*   `radius_label` - Label for the radius dropdown.
 
 Example:
-`[show_search_form placeholder="Type your address" button_text="Find"]`
+`[show_search_by_address_form placeholder="Enter location" button_text="Find Locations" radius_label="Distance"]`
 
-**Search Results Shortcode:**
-`[show_search_results]`
+**Compact Search Form:**
+`[show_search_by_address_short_form]`
 
-This shortcode is currently a placeholder and will be implemented in future versions.
+Attributes:
+*   `placeholder` - Placeholder text.
+*   `button_text` - Text for the search button.
+
+**Map Results:**
+`[render_search_results_on_map]`
+
+Attributes:
+*   `height` - Height of the map container (default: "600px").
+
+Example:
+`[render_search_results_on_map height="500px"]`
 
 == Changelog ==
 
-= 1.0.0 =
-* Initial release
-* Added show_search_form shortcode with Google Maps Autocomplete
-* Added show_search_results shortcode (placeholder)
+= 0.7 =
+*   Added extra setting to set text message when no location is provided
 
+
+= 0.6 =
+*  Made plugin translatable; Added Polish Translation

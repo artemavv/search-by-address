@@ -3,7 +3,7 @@
  * Plugin Name: Search Posts By Address
  * Plugin URI: https://example.com/search-posts-by-address
  * Description: A plugin that provides search functionality with Google Maps Autocomplete for custom posts.
- * Version: 0.6
+ * Version: 0.7
  * Author: Artem Avvakumov
  * Author URI: https://example.com
  * License: GPL v2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('SCP_VERSION', '0.6');
+define('SCP_VERSION', '0.7');
 define('SCP_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SCP_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('SCP_TEXTDOMAIN', 'search-posts-by-address');
@@ -226,7 +226,18 @@ class Search_Posts_By_Address {
 
         $target_page = get_permalink($target_page_id);
 
-        $selected_radius = $_GET['radius'] ?: 1000;
+        $radius_options_str = self::get_search_form_setting('radius_options');
+        $radius_options_lines = explode("\n", $radius_options_str);
+        $default_radius = 1000;
+        
+        if (!empty($radius_options_lines)) {
+            $first_option_parts = explode(',', trim($radius_options_lines[0]));
+            if (isset($first_option_parts[0]) && is_numeric(trim($first_option_parts[0]))) {
+                $default_radius = trim($first_option_parts[0]);
+            }
+        }
+
+        $selected_radius = isset($_GET['radius']) ? $_GET['radius'] : $default_radius;
 
         $submit_button_icon = self::get_search_form_setting('submit_button_icon');
         $icon_html = '';
@@ -256,9 +267,7 @@ class Search_Posts_By_Address {
                     <label for="scp-radius" class="scp-label"><?php echo esc_html($radius_label); ?></label>
                     <select id="scp-radius" name="radius" class="scp-radius-select">
                         <?php
-                        $radius_options = self::get_search_form_setting('radius_options');
-                        $radius_options = explode("\n", $radius_options);
-                        foreach ($radius_options as $radius_option) :
+                        foreach ($radius_options_lines as $radius_option) :
                             $radius_option = explode(',', trim($radius_option));
                             $radius_value = trim($radius_option[0]);
                             $radius_text = trim($radius_option[1]);
@@ -292,9 +301,7 @@ class Search_Posts_By_Address {
     public function render_search_short_form($atts) {
         $atts = shortcode_atts(array(
             'placeholder' => '',
-            'button_text' => '',
-            'address_label' => '',
-            'radius_label' => ''
+            'button_text' => ''
         ), $atts, 'show_search_by_address_short_form');
         
         $address_value = $_GET['address'] ?? '';
@@ -303,16 +310,7 @@ class Search_Posts_By_Address {
         $address_value = $_GET['address'] ?? '';
 
         // Get field labels from settings with fallbacks
-        $address_label = $atts['address_label'] ?: self::get_search_form_setting('address_label');
-        if (empty($address_label)) {
-            $address_label = __('Address', SCP_TEXTDOMAIN);
-        }
-        
-        $radius_label = $atts['radius_label'] ?: self::get_search_form_setting('radius_label');
-        if (empty($radius_label)) {
-            $radius_label = __('Search Radius', SCP_TEXTDOMAIN);
-        }
-        
+
         $submit_button_title = $atts['button_text'] ?: self::get_search_form_setting('submit_button_title');
         if (empty($submit_button_title)) {
             $submit_button_title = __('Search', SCP_TEXTDOMAIN);
@@ -327,7 +325,18 @@ class Search_Posts_By_Address {
 
         $target_page = get_permalink($target_page_id);
 
-        $selected_radius = $_GET['radius'] ?: 1000;
+        $radius_options_str = self::get_search_form_setting('radius_options');
+        $radius_options_lines = explode("\n", $radius_options_str);
+        $default_radius = 1000;
+        
+        if (!empty($radius_options_lines)) {
+            $first_option_parts = explode(',', trim($radius_options_lines[0]));
+            if (isset($first_option_parts[0]) && is_numeric(trim($first_option_parts[0]))) {
+                $default_radius = trim($first_option_parts[0]);
+            }
+        }
+
+        $selected_radius = isset($_GET['radius']) ? $_GET['radius'] : $default_radius;
 
         $submit_button_icon = self::get_search_form_setting('submit_button_icon');
         $icon_html = '';
@@ -352,9 +361,7 @@ class Search_Posts_By_Address {
                 <input type="hidden" id="scp-full-address-short" name="address" value="<?php echo esc_attr($address_value); ?>" />
                 <select id="scp-radius-short" name="radius" class="scp-radius-select">
                     <?php
-                    $radius_options = self::get_search_form_setting('radius_options');
-                    $radius_options = explode("\n", $radius_options);
-                    foreach ($radius_options as $radius_option) :
+                    foreach ($radius_options_lines as $radius_option) :
                         $radius_option = explode(',', trim($radius_option));
                         $radius_value = trim($radius_option[0]);
                         $radius_text = trim($radius_option[1]);
@@ -374,7 +381,7 @@ class Search_Posts_By_Address {
     }
    
      /**
-     * Render search results shortcode
+     * Find posts by latitude and longitude
      * 
      * @param float $latitude Target latitude
      * @param float $longitude Target longitude
@@ -481,7 +488,8 @@ class Search_Posts_By_Address {
         
         // Validate search parameters
         if (empty($search_latitude) || empty($search_longitude)) {
-            return '<div class="scp-map-error">' . esc_html__('Sorry, the search results are not available (location is not provided).', SCP_TEXTDOMAIN) . '</div>';
+            $unavailable_message = get_option('scp_search_results_unavailable_message', __('Sorry, the search results are not available (location is not provided).', SCP_TEXTDOMAIN));
+            return '<div class="scp-map-error">' . esc_html($unavailable_message) . '</div>';
         }
         
         $meta_key_latitude = self::get_search_results_setting('meta_key_latitude');

@@ -222,6 +222,17 @@ class SCP_Settings {
                 'default' => ''
             )
         );
+
+        // Unavailable results message (no location)
+        register_setting(
+            'scp_settings_group',
+            'scp_search_results_unavailable_message',
+            array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'default' => 'Sorry, the search results are not available (location is not provided).'
+            )
+        );
         //---------------------Register fields for the search results---------------------
         $this->add_fields_to_admin_page();
 
@@ -387,6 +398,14 @@ class SCP_Settings {
             'scp_search_results_missing_message',
             __('No results message', SCP_TEXTDOMAIN),
             array($this, 'render_search_results_missing_message_field'),
+            SCP_TEXTDOMAIN,
+            'scp_search_results_section'
+        );
+
+        add_settings_field(
+            'scp_search_results_unavailable_message',
+            __('Unavailable results message (no location)', SCP_TEXTDOMAIN),
+            array($this, 'render_search_results_unavailable_message_field'),
             SCP_TEXTDOMAIN,
             'scp_search_results_section'
         );
@@ -704,6 +723,26 @@ class SCP_Settings {
         </p>
         <?php
     }
+
+    /**
+     * Render Unavailable results message field
+     */
+    public function render_search_results_unavailable_message_field() {
+        $message = get_option('scp_search_results_unavailable_message', 'Sorry, the search results are not available (location is not provided).');
+        ?>
+        <input 
+            type="text" 
+            id="scp_search_results_unavailable_message"
+            name="scp_search_results_unavailable_message"
+            value="<?php echo esc_attr($message); ?>"
+            class="regular-text"
+            placeholder="<?php echo esc_attr__('Enter the unavailable results message', SCP_TEXTDOMAIN); ?>"
+        />
+        <p class="description">
+            <?php echo esc_html__('This message is displayed when the search results page is loaded but no location is provided (e.g. direct access without search parameters).', SCP_TEXTDOMAIN); ?>
+        </p>
+        <?php
+    }
     
     /**
      * Render API section description
@@ -772,9 +811,25 @@ class SCP_Settings {
             <div class="scp-admin-content">
                 <h2><?php echo esc_html__('Usage', SCP_TEXTDOMAIN); ?></h2>
                 <p><?php echo esc_html__('Use the following shortcodes to display the search form and results:', SCP_TEXTDOMAIN); ?></p>
-                <ul>
-                    <li><code>[show_search_form]</code> - <?php echo esc_html__('Displays the search form with address autocomplete', SCP_TEXTDOMAIN); ?></li>
-                    <li><code>[show_search_results]</code> - <?php echo esc_html__('Displays the search results', SCP_TEXTDOMAIN); ?></li>
+                <ul style="margin-left: 20px; list-style-type: disc;">
+                    <li>
+                        <code>[show_search_by_address_form]</code> - <?php echo esc_html__('Displays the standard search form with address autocomplete and radius selection.', SCP_TEXTDOMAIN); ?>
+                        <br><br>
+                        <em><?php echo esc_html__('Attributes:', SCP_TEXTDOMAIN); ?></em> <code>placeholder</code>, <code>button_text</code>, <code>address_label</code>, <code>radius_label</code>.
+                        <br><br>
+                    </li>
+                    <li>
+                        <code>[show_search_by_address_short_form]</code> - <?php echo esc_html__('Displays a compact version of the search form (inline style).', SCP_TEXTDOMAIN); ?>
+                        <br><br>
+                        <em><?php echo esc_html__('Attributes:', SCP_TEXTDOMAIN); ?></em> <code>placeholder</code>, <code>button_text</code>.
+                        <br><br>
+                    </li>
+                    <li>
+                        <code>[render_search_results_on_map]</code> - <?php echo esc_html__('Displays the search results on a Google Map.', SCP_TEXTDOMAIN); ?>
+                        <br>
+                        <br>
+                        <em><?php echo esc_html__('Attributes:', SCP_TEXTDOMAIN); ?></em> <code>height</code> (default: 600px).
+                    </li>
                 </ul>
             </div>
         </div>

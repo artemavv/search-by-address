@@ -208,3 +208,12 @@
     }
 }
 
+.scp-map-error {
+    background-color: #f0f0f0;
+    text-align: center;
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 4px;
+    color: #666;
+    border: 1px solid #e0e0e0;
+}

@@ -1,8 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Search By Address\n"
-"POT-Creation-Date: 2026-01-14 11:36+0100\n"
-"PO-Revision-Date: 2026-01-14 11:37+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-24 17:26+0100\n"
+"PO-Revision-Date: 2026-01-24 17:32+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pl_PL\n"
@@ -19,107 +20,111 @@ msgstr ""
 msgid "Search by Address"
 msgstr "Wyszukiwanie według adresu"
 
-#: scp-settings.php:239
+#: scp-settings.php:250
 msgid "Search Form Settings"
 msgstr "Ustawienia formularza wyszukiwania"
 
-#: scp-settings.php:246
+#: scp-settings.php:257
 msgid "Search Form Title"
 msgstr "Tytuł formularza wyszukiwania"
 
-#: scp-settings.php:254
+#: scp-settings.php:265
 msgid "Submit Button Title"
 msgstr "Tekst przycisku wyszukiwania"
 
-#: scp-settings.php:262
+#: scp-settings.php:273
 msgid "Submit Button Icon"
 msgstr "Ikona przycisku wyszukiwania"
 
-#: scp-settings.php:270
+#: scp-settings.php:281
 msgid "Search Placeholder"
 msgstr "Tekst podpowiedzi pola wyszukiwania"
 
-#: scp-settings.php:278
+#: scp-settings.php:289
 msgid "Address Field Label"
 msgstr "Etykieta pola adresu"
 
-#: scp-settings.php:286
+#: scp-settings.php:297
 msgid "Radius Field Label"
 msgstr "Etykieta pola promienia"
 
-#: scp-settings.php:294
+#: scp-settings.php:305
 msgid "Radius Field Options"
 msgstr "Opcje pola promienia"
 
-#: scp-settings.php:302
+#: scp-settings.php:313
 msgid "Target Country"
 msgstr "Kraj docelowy"
 
-#: scp-settings.php:310
+#: scp-settings.php:321
 msgid "Google Maps API Settings"
 msgstr "Ustawienia Google Maps API"
 
-#: scp-settings.php:317
+#: scp-settings.php:328
 msgid "Google Maps API Key"
 msgstr "Klucz API Google Maps"
 
-#: scp-settings.php:331
+#: scp-settings.php:342
 msgid "Search Results"
 msgstr "Wyniki wyszukiwania"
 
-#: scp-settings.php:338
+#: scp-settings.php:349
 msgid "Post type to search in"
 msgstr "Typ wpisów do przeszukania"
 
-#: scp-settings.php:347
+#: scp-settings.php:358
 msgid "Posts Per Page"
 msgstr "Liczba wpisów na stronę"
 
-#: scp-settings.php:355
+#: scp-settings.php:366
 msgid "Page to Redirect to"
 msgstr "Strona przekierowania"
 
-#: scp-settings.php:364
+#: scp-settings.php:375
 msgid "Meta Key for Latitude"
 msgstr "Klucz meta dla szerokości geograficznej"
 
-#: scp-settings.php:372
+#: scp-settings.php:383
 msgid "Meta Key for Longitude"
 msgstr "Klucz meta dla długości geograficznej"
 
-#: scp-settings.php:380
+#: scp-settings.php:391
 msgid "No results placeholder marker"
 msgstr "Znacznik zastępczy braku wyników"
 
-#: scp-settings.php:388
+#: scp-settings.php:399
 msgid "No results message"
 msgstr "Komunikat braku wyników"
 
-#: scp-settings.php:399
+#: scp-settings.php:407
+msgid "Unavailable results message (no location)"
+msgstr "Wprowadź komunikat o braku wyników"
+
+#: scp-settings.php:418
 msgid "Configure the search form settings."
 msgstr "Skonfiguruj ustawienia formularza wyszukiwania."
 
-#: scp-settings.php:414
+#: scp-settings.php:433
 msgid "Enter the search form title"
 msgstr "Wprowadź tytuł formularza wyszukiwania"
 
-#: scp-settings.php:431
+#: scp-settings.php:450
 msgid "Enter the submit button title"
 msgstr "Wprowadź tekst przycisku wyszukiwania"
 
-#: scp-settings.php:445
+#: scp-settings.php:464
 msgid "Enter the submit button icon"
 msgstr "Wprowadź ikonę przycisku wyszukiwania"
 
-#: scp-settings.php:448
+#: scp-settings.php:467
 msgid "Enter the icon code for the submit button."
 msgstr "Wprowadź kod ikony dla przycisku wyszukiwania."
 
-#: scp-settings.php:449
+#: scp-settings.php:468
 msgid "E.g. search, location_on, location_off, etc."
 msgstr "Np. search, location_on, location_off itp."
 
-#: scp-settings.php:456
+#: scp-settings.php:475
 #, php-format
 msgid ""
 "You can find the icon code in the <a href=\"%s\" target=\"_blank\">Material "
@@ -128,19 +133,19 @@ msgstr ""
 "Kod ikony można znaleźć na liście <a href=\"%s\" target=\"_blank\">Material "
 "Icons</a>."
 
-#: scp-settings.php:483
+#: scp-settings.php:502
 msgid "Enter the address field label"
 msgstr "Wprowadź etykietę pola adresu"
 
-#: scp-settings.php:500
+#: scp-settings.php:519
 msgid "Enter the radius field label"
 msgstr "Wprowadź etykietę pola promienia"
 
-#: scp-settings.php:513
+#: scp-settings.php:532
 msgid "Enter the radius options - one per line."
 msgstr "Wprowadź opcje promienia — po jednej w każdej linii."
 
-#: scp-settings.php:516
+#: scp-settings.php:535
 msgid ""
 "On each line enter the radius option and the corresponding label separated "
 "by a comma."
@@ -148,15 +153,15 @@ msgstr ""
 "W każdej linii wprowadź wartość promienia i odpowiadającą jej etykietę, "
 "oddzielone przecinkiem."
 
-#: scp-settings.php:517
+#: scp-settings.php:536
 msgid "E.g. 500, 500 meters"
 msgstr "Np. 500, 500 metrów"
 
-#: scp-settings.php:535
+#: scp-settings.php:554
 msgid "Enter the search placeholder"
 msgstr "Wprowadź tekst podpowiedzi wyszukiwania"
 
-#: scp-settings.php:559
+#: scp-settings.php:578
 msgid ""
 "Select the target country to restrict address autocomplete results to a "
 "specific country."
@@ -164,39 +169,39 @@ msgstr ""
 "Wybierz kraj docelowy, aby ograniczyć wyniki autouzupełniania adresów do "
 "konkretnego kraju."
 
-#: scp-settings.php:568
+#: scp-settings.php:587
 msgid "Configure the search results settings."
 msgstr "Skonfiguruj ustawienia wyników wyszukiwania."
 
-#: scp-settings.php:583
+#: scp-settings.php:602
 msgid "-- Select a post type --"
 msgstr "-- Wybierz typ wpisu --"
 
-#: scp-settings.php:602
+#: scp-settings.php:621
 msgid "Enter the meta key for latitude"
 msgstr "Wprowadź klucz meta dla szerokości geograficznej"
 
-#: scp-settings.php:616
+#: scp-settings.php:635
 msgid "Enter the meta key for longitude"
 msgstr "Wprowadź klucz meta dla długości geograficznej"
 
-#: scp-settings.php:632
+#: scp-settings.php:651
 msgid "Enter the number of posts to display per page"
 msgstr "Wprowadź liczbę wpisów wyświetlanych na stronie"
 
-#: scp-settings.php:652
+#: scp-settings.php:671
 msgid "-- Select a page --"
 msgstr "-- Wybierz stronę --"
 
-#: scp-settings.php:660
+#: scp-settings.php:679
 msgid "Select the page where search results will be displayed."
 msgstr "Wybierz stronę, na której będą wyświetlane wyniki wyszukiwania."
 
-#: scp-settings.php:677
+#: scp-settings.php:696
 msgid "Enter the no results placeholder marker"
 msgstr "Wprowadź znacznik zastępczy braku wyników"
 
-#: scp-settings.php:680
+#: scp-settings.php:699
 msgid ""
 "You can use a placeholder marker to display a message when no results are "
 "found. A text entered here will be replaced with the correct message when no "
@@ -206,11 +211,11 @@ msgstr ""
 "znaleziono wyników. Wprowadzony tutaj tekst zostanie zastąpiony właściwym "
 "komunikatem."
 
-#: scp-settings.php:681
+#: scp-settings.php:700
 msgid "You can place this marker anywhere in the page."
 msgstr "Możesz umieścić ten znacznik w dowolnym miejscu na stronie."
 
-#: scp-settings.php:682
+#: scp-settings.php:701
 msgid ""
 "In 'Post List' settings you can place the marker under 'Action when no "
 "results found' section ('Order & Quantity' tab)"
@@ -218,11 +223,11 @@ msgstr ""
 "W ustawieniach „Lista wpisów” możesz umieścić znacznik w sekcji „Akcja przy "
 "braku wyników” (zakładka „Kolejność i ilość”)."
 
-#: scp-settings.php:699
+#: scp-settings.php:718
 msgid "Enter the no results message"
 msgstr "Wprowadź komunikat braku wyników"
 
-#: scp-settings.php:702
+#: scp-settings.php:721
 msgid ""
 "A text entered here will be used as a message when no results are found - it "
 "will replace 'placeholder marker' defined above."
@@ -230,73 +235,102 @@ msgstr ""
 "Wprowadzony tutaj tekst zostanie użyty jako komunikat braku wyników i "
 "zastąpi zdefiniowany powyżej znacznik zastępczy."
 
-#: scp-settings.php:703
+#: scp-settings.php:722
 msgid ""
 "You can use {address} in the message text - it will be replaced with the "
 "actual address searched for."
 msgstr ""
-"Możesz użyć {address} w treści komunikatu — zostanie on zastąpiony faktycznie "
-"wyszukiwanym adresem."
+"Możesz użyć {address} w treści komunikatu — zostanie on zastąpiony "
+"faktycznie wyszukiwanym adresem."
 
-#: scp-settings.php:712
+#: scp-settings.php:739
+#, fuzzy
+msgid "Enter the unavailable results message"
+msgstr "Wprowadź komunikat braku wyników"
+
+#: scp-settings.php:742
+msgid ""
+"This message is displayed when the search results page is loaded but no "
+"location is provided (e.g. direct access without search parameters)."
+msgstr ""
+"Ten komunikat jest wyświetlany, gdy strona wyników wyszukiwania jest "
+"załadowana, ale nie podano lokalizacji (np. bezpośredni dostęp bez "
+"parametrów wyszukiwania)."
+
+#: scp-settings.php:751
 msgid ""
 "Enter your Google Maps API key to enable the address autocomplete "
 "functionality."
 msgstr ""
 "Wprowadź klucz API Google Maps, aby włączyć funkcję autouzupełniania adresów."
 
-#: scp-settings.php:727
+#: scp-settings.php:766
 msgid "Enter your Google Maps API key"
 msgstr "Wprowadź swój klucz API Google Maps"
 
-#: scp-settings.php:734
+#: scp-settings.php:773
 #, php-format
 msgid ""
 "Get your API key from the <a href=\"%s\" target=\"_blank\">Google Cloud "
 "Console</a>."
 msgstr ""
-"Uzyskaj klucz API w <a href=\"%s\" target=\"_blank\">Google Cloud Console</a>."
+"Uzyskaj klucz API w <a href=\"%s\" target=\"_blank\">Google Cloud Console</"
+"a>."
 
-#: scp-settings.php:745
+#: scp-settings.php:784
 msgid "Make sure to enable the Maps JavaScript API and Places API."
 msgstr "Upewnij się, że włączono Maps JavaScript API oraz Places API."
 
-#: scp-settings.php:768
+#: scp-settings.php:807
 msgid "Save Settings"
 msgstr "Zapisz ustawienia"
 
-#: scp-settings.php:773
+#: scp-settings.php:812
 msgid "Usage"
 msgstr "Użycie"
 
-#: scp-settings.php:774
+#: scp-settings.php:813
 msgid "Use the following shortcodes to display the search form and results:"
-msgstr "Użyj poniższych shortcode’ów, aby wyświetlić formularz i wyniki wyszukiwania:"
+msgstr ""
+"Użyj poniższych shortcode’ów, aby wyświetlić formularz i wyniki wyszukiwania:"
 
-#: scp-settings.php:776
-msgid "Displays the search form with address autocomplete"
-msgstr "Wyświetla formularz wyszukiwania z autouzupełnianiem adresu"
+#: scp-settings.php:816
+msgid ""
+"Displays the standard search form with address autocomplete and radius "
+"selection."
+msgstr ""
+"Wyświetla standardowy formularz wyszukiwania z automatycznym uzupełnianiem "
+"adresu i wyborem promienia."
 
-#: scp-settings.php:777
-msgid "Displays the search results"
-msgstr "Wyświetla wyniki wyszukiwania"
+#: scp-settings.php:818 scp-settings.php:824 scp-settings.php:831
+msgid "Attributes:"
+msgstr "Atrybuty:"
 
-#: search-posts-by-address.php:207 search-posts-by-address.php:308
+#: scp-settings.php:822
+msgid "Displays a compact version of the search form (inline style)."
+msgstr "Wyświetla kompaktową wersję formularza wyszukiwania (styl inline)."
+
+#: scp-settings.php:828
+msgid "Displays the search results on a Google Map."
+msgstr "Wyświetla wyniki wyszukiwania na mapie Google."
+
+#: search-posts-by-address.php:207
 msgid "Address"
 msgstr "Adres"
 
-#: search-posts-by-address.php:212 search-posts-by-address.php:313
+#: search-posts-by-address.php:212
 msgid "Search Radius"
 msgstr "Promień wyszukiwania"
 
-#: search-posts-by-address.php:217 search-posts-by-address.php:318
+#: search-posts-by-address.php:217 search-posts-by-address.php:316
 msgid "Search"
 msgstr "Szukaj"
 
-#: search-posts-by-address.php:222 search-posts-by-address.php:323
+#: search-posts-by-address.php:222 search-posts-by-address.php:321
 msgid "Enter an address..."
 msgstr "Wpisz adres..."
 
-#: search-posts-by-address.php:484
+#: search-posts-by-address.php:491
 msgid "Sorry, the search results are not available (location is not provided)."
-msgstr "Przepraszamy, wyniki wyszukiwania są niedostępne (nie podano lokalizacji)."
+msgstr ""
+"Przepraszamy, wyniki wyszukiwania są niedostępne (nie podano lokalizacji)."

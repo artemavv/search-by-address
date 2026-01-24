@@ -3,38 +3,307 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Search Posts By Address 0.5\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/search-posts-by-address\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-24 17:26+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-14T10:21:31+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: search-posts-by-address\n"
 
-#. Plugin Name of the plugin
-#: search-posts-by-address.php
-msgid "Search Posts By Address"
+#: scp-settings.php:31 scp-settings.php:32
+msgid "Search by Address"
 msgstr ""
 
-#. Plugin URI of the plugin
-#: search-posts-by-address.php
-msgid "https://example.com/search-posts-by-address"
+#: scp-settings.php:250
+msgid "Search Form Settings"
 msgstr ""
 
-#. Description of the plugin
-#: search-posts-by-address.php
-msgid "A plugin that provides search functionality with Google Maps Autocomplete for custom posts."
+#: scp-settings.php:257
+msgid "Search Form Title"
 msgstr ""
 
-#. Author of the plugin
-#: search-posts-by-address.php
-msgid "Artem Avvakumov"
+#: scp-settings.php:265
+msgid "Submit Button Title"
 msgstr ""
 
-#. Author URI of the plugin
-#: search-posts-by-address.php
-msgid "https://example.com"
+#: scp-settings.php:273
+msgid "Submit Button Icon"
+msgstr ""
+
+#: scp-settings.php:281
+msgid "Search Placeholder"
+msgstr ""
+
+#: scp-settings.php:289
+msgid "Address Field Label"
+msgstr ""
+
+#: scp-settings.php:297
+msgid "Radius Field Label"
+msgstr ""
+
+#: scp-settings.php:305
+msgid "Radius Field Options"
+msgstr ""
+
+#: scp-settings.php:313
+msgid "Target Country"
+msgstr ""
+
+#: scp-settings.php:321
+msgid "Google Maps API Settings"
+msgstr ""
+
+#: scp-settings.php:328
+msgid "Google Maps API Key"
+msgstr ""
+
+#: scp-settings.php:342
+msgid "Search Results"
+msgstr ""
+
+#: scp-settings.php:349
+msgid "Post type to search in"
+msgstr ""
+
+#: scp-settings.php:358
+msgid "Posts Per Page"
+msgstr ""
+
+#: scp-settings.php:366
+msgid "Page to Redirect to"
+msgstr ""
+
+#: scp-settings.php:375
+msgid "Meta Key for Latitude"
+msgstr ""
+
+#: scp-settings.php:383
+msgid "Meta Key for Longitude"
+msgstr ""
+
+#: scp-settings.php:391
+msgid "No results placeholder marker"
+msgstr ""
+
+#: scp-settings.php:399
+msgid "No results message"
+msgstr ""
+
+#: scp-settings.php:407
+msgid "Unavailable results message (no location)"
+msgstr ""
+
+#: scp-settings.php:418
+msgid "Configure the search form settings."
+msgstr ""
+
+#: scp-settings.php:433
+msgid "Enter the search form title"
+msgstr ""
+
+#: scp-settings.php:450
+msgid "Enter the submit button title"
+msgstr ""
+
+#: scp-settings.php:464
+msgid "Enter the submit button icon"
+msgstr ""
+
+#: scp-settings.php:467
+msgid "Enter the icon code for the submit button."
+msgstr ""
+
+#: scp-settings.php:468
+msgid "E.g. search, location_on, location_off, etc."
+msgstr ""
+
+#: scp-settings.php:475
+#, php-format
+msgid ""
+"You can find the icon code in the <a href=\"%s\" target=\"_blank\">Material "
+"Icons</a> list."
+msgstr ""
+
+#: scp-settings.php:502
+msgid "Enter the address field label"
+msgstr ""
+
+#: scp-settings.php:519
+msgid "Enter the radius field label"
+msgstr ""
+
+#: scp-settings.php:532
+msgid "Enter the radius options - one per line."
+msgstr ""
+
+#: scp-settings.php:535
+msgid ""
+"On each line enter the radius option and the corresponding label separated "
+"by a comma."
+msgstr ""
+
+#: scp-settings.php:536
+msgid "E.g. 500, 500 meters"
+msgstr ""
+
+#: scp-settings.php:554
+msgid "Enter the search placeholder"
+msgstr ""
+
+#: scp-settings.php:578
+msgid ""
+"Select the target country to restrict address autocomplete results to a "
+"specific country."
+msgstr ""
+
+#: scp-settings.php:587
+msgid "Configure the search results settings."
+msgstr ""
+
+#: scp-settings.php:602
+msgid "-- Select a post type --"
+msgstr ""
+
+#: scp-settings.php:621
+msgid "Enter the meta key for latitude"
+msgstr ""
+
+#: scp-settings.php:635
+msgid "Enter the meta key for longitude"
+msgstr ""
+
+#: scp-settings.php:651
+msgid "Enter the number of posts to display per page"
+msgstr ""
+
+#: scp-settings.php:671
+msgid "-- Select a page --"
+msgstr ""
+
+#: scp-settings.php:679
+msgid "Select the page where search results will be displayed."
+msgstr ""
+
+#: scp-settings.php:696
+msgid "Enter the no results placeholder marker"
+msgstr ""
+
+#: scp-settings.php:699
+msgid ""
+"You can use a placeholder marker to display a message when no results are "
+"found. A text entered here will be replaced with the correct message when no "
+"results are found."
+msgstr ""
+
+#: scp-settings.php:700
+msgid "You can place this marker anywhere in the page."
+msgstr ""
+
+#: scp-settings.php:701
+msgid ""
+"In 'Post List' settings you can place the marker under 'Action when no "
+"results found' section ('Order & Quantity' tab)"
+msgstr ""
+
+#: scp-settings.php:718
+msgid "Enter the no results message"
+msgstr ""
+
+#: scp-settings.php:721
+msgid ""
+"A text entered here will be used as a message when no results are found - it "
+"will replace 'placeholder marker' defined above."
+msgstr ""
+
+#: scp-settings.php:722
+msgid ""
+"You can use {address} in the message text - it will be replaced with the "
+"actual address searched for."
+msgstr ""
+
+#: scp-settings.php:739
+msgid "Enter the unavailable results message"
+msgstr ""
+
+#: scp-settings.php:742
+msgid ""
+"This message is displayed when the search results page is loaded but no "
+"location is provided (e.g. direct access without search parameters)."
+msgstr ""
+
+#: scp-settings.php:751
+msgid ""
+"Enter your Google Maps API key to enable the address autocomplete "
+"functionality."
+msgstr ""
+
+#: scp-settings.php:766
+msgid "Enter your Google Maps API key"
+msgstr ""
+
+#: scp-settings.php:773
+#, php-format
+msgid ""
+"Get your API key from the <a href=\"%s\" target=\"_blank\">Google Cloud "
+"Console</a>."
+msgstr ""
+
+#: scp-settings.php:784
+msgid "Make sure to enable the Maps JavaScript API and Places API."
+msgstr ""
+
+#: scp-settings.php:807
+msgid "Save Settings"
+msgstr ""
+
+#: scp-settings.php:812
+msgid "Usage"
+msgstr ""
+
+#: scp-settings.php:813
+msgid "Use the following shortcodes to display the search form and results:"
+msgstr ""
+
+#: scp-settings.php:816
+msgid ""
+"Displays the standard search form with address autocomplete and radius "
+"selection."
+msgstr ""
+
+#: scp-settings.php:818 scp-settings.php:824 scp-settings.php:831
+msgid "Attributes:"
+msgstr ""
+
+#: scp-settings.php:822
+msgid "Displays a compact version of the search form (inline style)."
+msgstr ""
+
+#: scp-settings.php:828
+msgid "Displays the search results on a Google Map."
+msgstr ""
+
+#: search-posts-by-address.php:207
+msgid "Address"
+msgstr ""
+
+#: search-posts-by-address.php:212
+msgid "Search Radius"
+msgstr ""
+
+#: search-posts-by-address.php:217 search-posts-by-address.php:316
+msgid "Search"
+msgstr ""
+
+#: search-posts-by-address.php:222 search-posts-by-address.php:321
+msgid "Enter an address..."
+msgstr ""
+
+#: search-posts-by-address.php:491
+msgid "Sorry, the search results are not available (location is not provided)."
 msgstr ""
