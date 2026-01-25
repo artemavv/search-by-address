@@ -3,7 +3,7 @@
  * Plugin Name: Search Posts By Address
  * Plugin URI: https://example.com/search-posts-by-address
  * Description: A plugin that provides search functionality with Google Maps Autocomplete for custom posts.
- * Version: 0.7
+ * Version: 0.7.2
  * Author: Artem Avvakumov
  * Author URI: https://example.com
  * License: GPL v2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('SCP_VERSION', '0.7');
+define('SCP_VERSION', '0.7.2');
 define('SCP_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SCP_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('SCP_TEXTDOMAIN', 'search-posts-by-address');

@@ -54,6 +54,10 @@ function create_mass_test_posts( $target_lat, $target_lng, $posts_count = 100) {
  * Hook to WordPress init action to handle mass test post creation
  */
 function handle_create_mass_test_posts() {
+
+
+// /?create_mass_test_posts=1&posts_count=30
+
     if (isset($_GET['create_mass_test_posts'])) {
         $target_lat = isset($_GET['target_lat']) ? floatval($_GET['target_lat']) : 0;
         $target_lng = isset($_GET['target_lng']) ? floatval($_GET['target_lng']) : 0;
@@ -61,7 +65,53 @@ function handle_create_mass_test_posts() {
         
         create_mass_test_posts($target_lat, $target_lng, $posts_count);
     }
+
+
+// /?old_key=_test_lat_1&new_key=_latitude&update_meta_keys_for_post_type=1
+// /?old_key=_test_lgn_2&new_key=_longitude&update_meta_keys_for_post_type=1
+
+
+    if (isset($_GET['update_meta_keys_for_post_type'])) {
+        $old_key = isset($_GET['old_key']) ? sanitize_text_field($_GET['old_key']) : '';
+        $new_key = isset($_GET['new_key']) ? sanitize_text_field($_GET['new_key']) : '';
+
+        $post_type = Search_Posts_By_Address::get_search_results_setting('post_type');
+                
+        update_meta_keys_for_post_type($old_key, $new_key, $post_type);
+    }
 }
 add_action('init', 'handle_create_mass_test_posts');
 
-// http://wynaj.local/search-results/?target_lat=52.233553&target_lng=21.019315&create_mass_test_posts=1&posts_count=30
+/**
+ * Update meta_key for posts of a specific post type using SQL JOIN
+ *
+ * @param string $old_key The current meta key (XXX)
+ * @param string $new_key The new meta key (YYY)
+ * @param string $post_type The post type to filter by (default: 'post')
+ * @return int|false Number of rows affected or false on error
+ */
+function update_meta_keys_for_post_type($old_key, $new_key, $post_type = 'post') {
+    global $wpdb;
+    
+    // Ensure inputs are valid
+    if (empty($old_key) || empty($new_key)) {
+        return false;
+    }
+
+    // Use $wpdb->posts and $wpdb->postmeta to ensure correct table prefixes
+    $query = $wpdb->prepare(
+        "UPDATE {$wpdb->postmeta} pm
+        INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID
+        SET pm.meta_key = %s
+        WHERE pm.meta_key = %s
+        AND p.post_type = %s",
+        $new_key,
+        $old_key,
+        $post_type
+    );
+
+    // Execute the query
+    $result = $wpdb->query($query);
+    
+    return $result;
+}
