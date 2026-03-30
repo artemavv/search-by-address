@@ -112,6 +112,37 @@
             showMap: showMap,
             hasValue: addressInput.value ? 'yes' : 'no'
         });
+
+        var messageSelector = (formId === 'scp-search-short-form') ? '#scp-form-message-short' : '#scp-form-message';
+        var geocoder = new google.maps.Geocoder();
+
+        /**
+         * Geocode a free-text address string (e.g. city name without picking a suggestion).
+         * @param {string} addressString
+         * @param {function(boolean, Object|null)} callback - (success, placeLikeObject)
+         */
+        function geocodeAddressString(addressString, callback) {
+            var geocodeRequest = {
+                address: addressString
+            };
+            if (targetCountry) {
+                geocodeRequest.componentRestrictions = { country: targetCountry };
+            }
+            geocoder.geocode(geocodeRequest, function(results, status) {
+                if (status === 'OK' && results && results.length > 0) {
+                    var result = results[0];
+                    callback(true, {
+                        geometry: {
+                            location: result.geometry.location
+                        },
+                        formatted_address: result.formatted_address,
+                        name: result.formatted_address
+                    });
+                } else {
+                    callback(false, null);
+                }
+            });
+        }
         
         // Function to handle place selection and populate fields
         function handlePlaceSelection(place) {
@@ -167,34 +198,12 @@
             // Only geocode if latitude/longitude are not already set
             if (!existingLat || !existingLng) {
                 console.log('[Autocomplete] Input has pre-filled value, geocoding address:', addressInput.value);
-                
-                // Use PlacesService to find the place by the address string
-                var geocoder = new google.maps.Geocoder();
-                var geocodeRequest = {
-                    address: addressInput.value
-                };
-                
-                // Add country restriction if target country is set
-                if (targetCountry) {
-                    geocodeRequest.componentRestrictions = { country: targetCountry };
-                }
-                
-                geocoder.geocode(geocodeRequest, function(results, status) {
-                    if (status === 'OK' && results && results.length > 0) {
-                        // Convert GeocoderResult to Place-like object
-                        var result = results[0];
-                        var place = {
-                            geometry: {
-                                location: result.geometry.location
-                            },
-                            formatted_address: result.formatted_address,
-                            name: result.formatted_address
-                        };
-                        
+                geocodeAddressString(addressInput.value, function(success, place) {
+                    if (success && place) {
                         console.log('[Autocomplete] Geocoding successful for pre-filled address');
                         handlePlaceSelection(place);
                     } else {
-                        console.log('[Autocomplete] Geocoding failed for pre-filled address:', status);
+                        console.log('[Autocomplete] Geocoding failed for pre-filled address');
                     }
                 });
             } else {
@@ -212,27 +221,16 @@
         // Handle form submission
         $('#' + formId).on('submit', function(e) {
             e.preventDefault();
-            
+
+            var $form = $(this);
             var latitude = $('#' + latId).val();
             var longitude = $('#' + lngId).val();
             var radius = $('#' + radiusId).val();
-            var fullAddress = $('#' + fullAddressId).val();
+            var typedAddress = (addressInput.value || '').trim();
+            var geocodeFailedMsg = (typeof scpData !== 'undefined' && scpData.geocodeFailedMessage) ? scpData.geocodeFailedMessage : 'We could not find that location. Please choose a suggestion from the list or enter a more specific address.';
+            var addressRequiredMsg = (typeof scpData !== 'undefined' && scpData.addressRequiredMessage) ? scpData.addressRequiredMessage : 'Please enter an address to search.';
 
-            if (!latitude || !longitude) {
-                console.log('[Autocomplete] Form submitted but coordinates are missing:', {
-                    formId: formId,
-                    inputId: inputId,
-                    latitude: latitude || 'missing',
-                    longitude: longitude || 'missing',
-                    fullAddress: fullAddress || 'missing',
-                    addressInputValue: addressInput.value || 'empty'
-                });
-                return;
-            }
-            
-            // Get target URL from form's target attribute
-            var targetUrl = $(this).attr('target');
-            
+            var targetUrl = $form.attr('target');
             if (!targetUrl) {
                 console.log('[Autocomplete] Form submitted but target URL is missing:', {
                     formId: formId,
@@ -240,16 +238,54 @@
                 });
                 return;
             }
-            
-            // Build URL with query parameters
-            var url = new URL(targetUrl, window.location.origin);
-            url.searchParams.set('latitude', parseFloat(latitude).toFixed(6));
-            url.searchParams.set('longitude', parseFloat(longitude).toFixed(6));
-            url.searchParams.set('radius', radius);
-            url.searchParams.set('address', fullAddress);
-            
-            // Redirect to target URL with parameters
-            window.location.href = url.toString();
+
+            function redirectToSearch() {
+                var lat = $('#' + latId).val();
+                var lng = $('#' + lngId).val();
+                var rad = $('#' + radiusId).val();
+                var addr = $('#' + fullAddressId).val() || typedAddress;
+                if (!lat || !lng) {
+                    return;
+                }
+                var url = new URL(targetUrl, window.location.origin);
+                url.searchParams.set('latitude', parseFloat(lat).toFixed(6));
+                url.searchParams.set('longitude', parseFloat(lng).toFixed(6));
+                url.searchParams.set('radius', rad);
+                url.searchParams.set('address', addr);
+                window.location.href = url.toString();
+            }
+
+            if (latitude && longitude) {
+                redirectToSearch();
+                return;
+            }
+
+            if (!typedAddress) {
+                console.log('[Autocomplete] Form submitted but coordinates and address text are missing:', {
+                    formId: formId,
+                    inputId: inputId
+                });
+                showMessage(addressRequiredMsg, 'error', messageSelector);
+                return;
+            }
+
+            if ($form.data('scp-geocoding')) {
+                return;
+            }
+            $form.data('scp-geocoding', true);
+
+            console.log('[Autocomplete] Coordinates missing on submit, geocoding typed address:', typedAddress);
+
+            geocodeAddressString(typedAddress, function(success, place) {
+                $form.data('scp-geocoding', false);
+                if (success && place) {
+                    handlePlaceSelection(place);
+                    redirectToSearch();
+                } else {
+                    console.log('[Autocomplete] Submit-time geocoding failed for:', typedAddress);
+                    showMessage(geocodeFailedMsg, 'error', messageSelector);
+                }
+            });
         });
     }
     
@@ -372,8 +408,9 @@
     /**
      * Show message to user
      */
-    function showMessage(message, type) {
-        var messageDiv = $('#scp-form-message');
+    function showMessage(message, type, messageSelector) {
+        messageSelector = messageSelector || '#scp-form-message';
+        var messageDiv = $(messageSelector);
         messageDiv.removeClass('scp-message-success scp-message-error')
                   .addClass('scp-message-' + type)
                   .text(message)
